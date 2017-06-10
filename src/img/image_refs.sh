@@ -7,6 +7,7 @@
 # Cover         | 75x75       | 106x150   | 355x500     | 727x1024    | 2598x3661
 # Board         | 75x75       | 200x135   | 500x338     | 1024x692    | 2400x1622
 # Board, Fire & Ice | 75x75   | 200x133   | 500x333     |             | 751x500
+# Board, tabletopia | 75x75   | 200x134   | 500x334     | 1024x685    | 1370x916
 # Cult Track    | 75x75       | 96x150    | 322x500     | 659x1024    | 1029x1600
 # Bonus Scrolls | 75x75       | 143x150   | 476x500     | 975x1024    | 2181x2291
 # Alchemists    | 75x75       | 200x129   | 500x321     | 1024x658    | 3307x2126
@@ -31,6 +32,7 @@ API=https://cf.geekdo-images.com/images/ #pic<image number>_<file size>.<file ex
 cover=1356616           #.jpg
 board=1346885           #.jpg
 board_fire_ice=2071235  #.jpg
+board_tabletopia=3462472  #.jpg
 cult_track=1347066      #.jpg
 bonus_scrolls=1351064   #.jpg
 alchemists=1442352      #.jpg
