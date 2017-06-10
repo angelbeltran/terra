@@ -6,6 +6,13 @@ import PropTypes from 'prop-types'
 export default class GameBoard extends Component {
   static propTypes = {
     boardImg: PropTypes.string.isRequired,
+    onTrackClick: PropTypes.func.isRequired,
+    // 0..5 -> bonus cards
+    onBonusCardClick: PropTypes.func.isRequired,
+    // f(row, column)
+    onGridClick: PropTypes.func.isRequired,
+    // 0..5 -> power bonus spaces
+    onPowerBonusClick: PropTypes.func.isRequired,
   }
 
   static TOP_RATIO = 94.9
@@ -60,7 +67,9 @@ export default class GameBoard extends Component {
                 </div>
                 <div style={{ width: '98%', display: 'flex', flexDirection: 'column-reverse' }}>
                   <div style={{ height: '94%' }}>
-                    <TopLeftScoreTrack />
+                    <TopLeftScoreTrack
+                      onTrackClick={this.props.onTrackClick}
+                    />
                   </div>
                 </div>
               </div>
@@ -71,7 +80,9 @@ export default class GameBoard extends Component {
                     <div style={{ width: '8%', }}>
                     </div>
                     <div style={{ width: '86%', }}>
-                      <LeftScoreTrack />
+                      <LeftScoreTrack
+                        onTrackClick={this.props.onTrackClick}
+                      />
                     </div>
                   </div>
 
@@ -85,7 +96,9 @@ export default class GameBoard extends Component {
                       <div style={{ height: '40.8%' }}>
                       </div>
                       <div style={{ height: '58.3%' }}>
-                        <BonusCards />
+                        <BonusCards
+                          onBonusCardClick={this.props.onBonusCardClick}
+                        />
                       </div>
                     </div>
                   </div>
@@ -98,7 +111,9 @@ export default class GameBoard extends Component {
               <div style={{ height: '0.7%' }}>
               </div>
               <div style={{ height: '4.5%' }}>
-                <TopScoreTrack />
+                <TopScoreTrack
+                  onTrackClick={this.props.onTrackClick}
+                />
               </div>
               <div style={{ height: '6%' }}>
               </div>
@@ -107,7 +122,9 @@ export default class GameBoard extends Component {
                 <div style={{ width: '2.2%' }}>
                 </div>
                 <div style={{ width: '95.8%' }}>
-                  <Board />
+                  <Board
+                    handleGridClick={this.props.onGridClick}
+                  />
                 </div>
               </div>
               <div style={{ height: '3.9%' }}>
@@ -117,7 +134,9 @@ export default class GameBoard extends Component {
                 </div>
                 {/* Power Store */}
                 <div style={{ width: '88.6%' }}>
-                  <PowerStore />
+                  <PowerBonuses
+                    onPowerBonusClick={this.props.onPowerBonusClick}
+                  />
                 </div>
               </div>
             </div>
@@ -129,7 +148,9 @@ export default class GameBoard extends Component {
                 <div style={{ height: '2%' }}>
                 </div>
                 <div style={{ height: '99%' }}>
-                  <RightScoreTrack />
+                  <RightScoreTrack
+                    onTrackClick={this.props.onTrackClick}
+                  />
                 </div>
               </div>
             </div>
@@ -137,7 +158,9 @@ export default class GameBoard extends Component {
           {/* Bottom score row */}
           <div style={GameBoard.BOTTOM_STYLE}>
             <div style={{ height: '80%', width: '99%', }}>
-              <BottomScoreTrack />
+              <BottomScoreTrack
+                onTrackClick={this.props.onTrackClick}
+              />
             </div>
           </div>
         </div>
@@ -147,20 +170,35 @@ export default class GameBoard extends Component {
 }
 
 class TopLeftScoreTrack extends Component {
+  static propTypes = {
+    onTrackClick: PropTypes.func.isRequired,
+  }
+
   render() {
     return (
       <div style={{ display: 'flex', height: '100%', }}>
         {/* Top left square, 20 pts */}
-        <div value={20} style={{ width: '40%', }}>
+        <div
+          style={{ width: '40%', }}
+          onClick={() => this.props.onTrackClick(20)}
+        >
         </div>
         <div style={{ width: '33%', display: 'column', }}>
           {/* 21 pts */}
-          <div value={21} style={{ height: '82%', }}>
+          <div
+            value={21}
+            style={{ height: '82%', }}
+            onClick={() => this.props.onTrackClick(21)}
+          >
           </div>
         </div>
         <div style={{ width: '27%' }}>
           {/* 22 pts */}
-          <div value={22} style={{ height: '65%', }}>
+          <div
+            value={22}
+            style={{ height: '65%', }}
+            onClick={() => this.props.onTrackClick(22)}
+          >
           </div>
         </div>
       </div>
@@ -169,18 +207,29 @@ class TopLeftScoreTrack extends Component {
 }
 
 class TopScoreTrack extends Component {
+  static propTypes = {
+    onTrackClick: PropTypes.func.isRequired,
+  }
+
   render() {
     const smallBoxes = []
     for (let i = 0; i < 25; i++) {
       smallBoxes.push(
-        <div key={24 + i} value={24 + i} style={{ width: `${100 / 25}%` }}>
+        <div
+          key={24 + i}
+          style={{ width: `${100 / 25}%` }}
+          onClick={() => this.props.onTrackClick(24 + i)}
+        >
         </div>
       )
     }
 
     return (
       <div style={{ width: '100%', height: '100%', display: 'flex' }}>
-        <div style={{ width: '5%', height: '122%' }}>
+        <div
+          style={{ width: '5%', height: '122%' }}
+          onClick={() => this.props.onTrackClick(23)}
+        >
         </div>
         {smallBoxes}
       </div>
@@ -189,13 +238,21 @@ class TopScoreTrack extends Component {
 }
 
 class RightScoreTrack extends Component {
+  static propTypes = {
+    onTrackClick: PropTypes.func.isRequired,
+  }
+
   render() {
     const pointOffset = 49
     const numBoxes = 21
     const smallBoxes = []
     for (let i = 0; i < numBoxes; i++) {
       smallBoxes.push(
-        <div key={pointOffset + i} value={pointOffset + i} style={{ height: `${100 / numBoxes}%` }}>
+        <div
+          key={pointOffset + i}
+          style={{ height: `${100 / numBoxes}%` }}
+          onClick={() => this.props.onTrackClick(pointOffset + i)}
+        >
         </div>
       )
     }
@@ -209,17 +266,29 @@ class RightScoreTrack extends Component {
 }
 
 class BottomScoreTrack extends Component {
+  static propTypes = {
+    onTrackClick: PropTypes.func.isRequired,
+  }
+
   render() {
     const numBoxes = 32
     const smallBoxes = []
 
     smallBoxes.push(
-      <div key={1} value={1} style={{ width: `${100 / numBoxes}%` }}>
+      <div
+        key={1}
+        style={{ width: `${100 / numBoxes}%` }}
+        onClick={() => this.props.onTrackClick(1)}
+      >
       </div>
     )
     for (let i = 0; i < numBoxes - 1; i++) {
       smallBoxes.push(
-        <div key={100 - i} value={100 - i} style={{ width: `${100 / numBoxes}%` }}>
+        <div
+          key={100 - i}
+          style={{ width: `${100 / numBoxes}%` }}
+          onClick={() => this.props.onTrackClick(100 - i)}
+        >
         </div>
       )
     }
@@ -233,11 +302,19 @@ class BottomScoreTrack extends Component {
 }
 
 class LeftScoreTrack extends Component {
+  static propTypes = {
+    onTrackClick: PropTypes.func.isRequired,
+  }
+
   render() {
     const boxes = []
     for (let i = 0; i < 15; i++) {
       boxes.push(
-        <div key={i} value={16 - i} style={{ height: '6.666666%' }}>
+        <div
+          key={i}
+          style={{ height: '6.666666%' }}
+          onClick={() => this.props.onTrackClick(16 - i)}
+        >
         </div>
       )
     }
@@ -247,16 +324,16 @@ class LeftScoreTrack extends Component {
         {/* Top 3 squares */}
         <div style={{ height: '22.3%', display: 'flex', flexDirection: 'column', }}>
           {/* 19pt */}
-          <div value={19} style={{ height: '39%' }}>
+          <div style={{ height: '39%' }} onClick={() => this.props.onTrackClick(19)}>
           </div>
           <div style={{ height: '31%', display: 'flex' }}>
             {/* 18pt */}
-            <div value={18} style={{ width: '80%' }}>
+            <div style={{ width: '80%' }} onClick={() => this.props.onTrackClick(18)}>
             </div>
           </div>
           <div style={{ height: '30%', display: 'flex' }}>
             {/* 17pt */}
-            <div value={17} style={{ width: '75%' }}>
+            <div style={{ width: '75%' }} onClick={() => this.props.onTrackClick(17)}>
             </div>
           </div>
         </div>
@@ -272,6 +349,10 @@ class LeftScoreTrack extends Component {
 }
 
 class BonusCards extends Component {
+  static propTypes = {
+    onBonusCardClick: PropTypes.func.isRequired,
+  }
+
   render() {
     const cards = []
     for (let i = 0; i < 6; i++) {
@@ -283,7 +364,9 @@ class BonusCards extends Component {
           flexDirection: 'column',
           justifyContent: 'center' }}
         >
-          <div value={6 - i} style={{ height: '88%' }}>
+          <div
+            style={{ height: '88%' }}
+            onClick={() => this.props.onBonusCardClick(6 - i)}>
           </div>
         </div>
       )
@@ -297,8 +380,11 @@ class BonusCards extends Component {
   }
 }
 
-// TODO
 class Board extends Component {
+  static propTypes = {
+    handleGridClick: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -338,7 +424,6 @@ class Board extends Component {
   handleClick = (e) => {
     const x = e.pageX - this.state.x
     const y = e.pageY - this.state.y
-
     const numRows = 28
     const numCols = 26
     const rowHeight = this.state.height / numRows
@@ -348,8 +433,7 @@ class Board extends Component {
 
     let tileRow = 0
     let tileCol = 0
-    let undecidedTileRow = 0
-    let undecidedTileCol = 0
+    let undecidedTileRow = false
 
     if (row > 24) {
       tileRow = 8
@@ -357,84 +441,44 @@ class Board extends Component {
       if (row % 3 !== 0) {
         tileRow = Math.floor(row / 3)
       } else {
-        // TODO: test this
         tileRow = Math.floor(row / 3)
-        undecidedTileRow = 3 // TODO: why is it this way?
+        undecidedTileRow = true
       }
     }
     if (col >= numCols - 1) {
       tileCol = 24
     } else if (col > 0) {
+      tileCol = col
       if (!undecidedTileRow) {
         tileCol = col - ((tileRow + col) % 2)
       } else {
-        // TODO: test this
-        tileCol = col - ((tileRow + col) % 2)
-        undecidedTileCol = col // TODO: why is it this way?
+        tileCol = col
       }
     }
 
     if (undecidedTileRow) {
-       // TODO: RETURN HERE TO COMPLETE
-       // get coordinates modded by the rowWidth & colWidth
-       // get the direction of the line
-       // if negative slope
-       //   y > mx + b <=> y - mx > b -> 0
-       //   y < mx + b <=> y - mx < b -> -1
-       // if positive slope, y 
-       //   y > mx + b <=> y - mx > b -> -1
-       //   y < mx + b <=> y - mx < b -> 0
-       //
-       //   y2 - y1 = m(x2 - x1)
-       // <=> 
-       //   y2 = m(x2 - x1) + y1
-       // <=>
-       //   y = m(x - x1) + y1
-       //     = mx - mx1 + y1
-       //     = mx - x1(y2 - y1)/(x2 - x1) + y1
-       //     = mx - x1(y2 - y1)/(x2 - x1) + y1(x2 - x1)/(x2 - x1)
-       //     = mx + (y1(x2 - x1) - x1(y2 - y1))/(x2 - x1)
-       //     = mx + (y1x2 - x1y2)/(x2 - x1)
-       // =>  b = (y1x2 - x1y2)/(x2 - x1)
-
       const positiveSlope = Boolean((col + Math.floor(row / 3)) % 2)
-      console.log('positiveSlope:', positiveSlope)
 
+      const x0 = x - (col*colWidth)
       const x1 = 0
       const x2 = colWidth
+      const y0 = y - (row*rowHeight)
       const y1 = positiveSlope ? 0 : rowHeight
       const y2 = positiveSlope ? rowHeight : 0
-      const m = (y2 - y1)/(x2 - x1)
-      const b = (y1*x2 - x1*y2)/(x2 - x1)
-      // let offset
-      const colOffset = ((positiveSlope + Boolean(y - m*x > b)) % 2) ? 0 : -1
-      //let colOffset
-      //if = ((positiveSlope + Boolean(y - m*x > b)) % 2) ? 0 : -1
 
-      tileCol += colOffset
+      const above = (x2 - x1)*y0 - (y2 - y1)*x0 > y1*x2 - x1*y2
 
-      console.log('colOffset:', colOffset)
-
-      /*
-      if (positiveSlope) {
-        const y1 = 0
-        const y2 = rowHeight
-        const m = (y2 - y1)/(x2 - x1)
-        offset = (y - m*x > b) ? 0 : -1
-      } else {
-        const y1 = rowHeight
-        const y2 = 0
-        const m = (y2 - y1)/(x2 - x1)
-        offset = (y - m*x > b) ? -1 : 0
+      if (!above) {
+        tileRow -= 1
+        if (!positiveSlope) {
+          tileCol -= 1
+        }
+      } else if (positiveSlope) {
+        tileCol -= 1
       }
-      */
     }
 
-    console.log('tileRow:', tileRow)
-    console.log('tileCol:', tileCol)
-    console.log('undecidedTileRow:', undecidedTileRow)
-    console.log('undecidedTileCol:', undecidedTileCol)
-    console.log('-------------------')
+    this.props.handleGridClick(tileRow, tileCol)
   }
 
   render() {
@@ -449,12 +493,19 @@ class Board extends Component {
   }
 }
 
-class PowerStore extends Component {
+class PowerBonuses extends Component {
+  static propTypes = {
+    onPowerBonusClick: PropTypes.func.isRequired,
+  }
+
   render() {
     const actionSpaces = []
-    for (let i = 0; i < 6; i++) {
+    for (let i = 1; i <= 6; i++) {
       actionSpaces.push(
-        <div key={i} value={i} style={{ width: '5%' }}>
+        <div
+          key={i}
+          style={{ width: '5%' }}
+          onClick={() => this.props.onPowerBonusClick(i)}>
         </div>
       )
     }
