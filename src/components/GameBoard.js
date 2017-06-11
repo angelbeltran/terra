@@ -1,6 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
+import villageBlackImg from '../img/village_black.png'
+import tradePostBlackImg from '../img/tradepost_black.png'
+import templeBlackImg from '../img/temple_black.png'
+import strongholdImg from '../img/stronghold_black.png'
+import sanctuaryImg from '../img/sanctuary_black.png'
+
+
+const img = {
+  black: {
+    village: villageBlackImg,
+    tradePost: tradePostBlackImg,
+    temple: templeBlackImg,
+    stronghold: strongholdImg,
+    sanctuary: sanctuaryImg,
+  },
+}
+
 
 // 1500 x 1011, ratio of board
 export default class GameBoard extends Component {
@@ -13,6 +30,10 @@ export default class GameBoard extends Component {
     onGridClick: PropTypes.func.isRequired,
     // 0..5 -> power bonus spaces
     onPowerBonusClick: PropTypes.func.isRequired,
+    // where the buildings are placed
+    buildingPlacement: PropTypes.object.isRequired,
+    // when a thing is placed on the board
+    onGridDrop: PropTypes.func.isRequired,
   }
 
   static TOP_RATIO = 94.9
@@ -124,6 +145,8 @@ export default class GameBoard extends Component {
                 <div style={{ width: '95.8%' }}>
                   <Board
                     handleGridClick={this.props.onGridClick}
+                    buildingPlacement={this.props.buildingPlacement}
+                    onDrop={this.props.onGridDrop}
                   />
                 </div>
               </div>
@@ -383,7 +406,12 @@ class BonusCards extends Component {
 class Board extends Component {
   static propTypes = {
     handleGridClick: PropTypes.func.isRequired,
+    buildingPlacement: PropTypes.object.isRequired,
+    onDrop: PropTypes.func.isRequired,
   }
+
+  static numRows = 28 // These are specific to the board.
+  static numCols = 26 // Potentially, they could be variables/props.
 
   constructor(props) {
     super(props)
@@ -424,10 +452,8 @@ class Board extends Component {
   handleClick = (e) => {
     const x = e.pageX - this.state.x
     const y = e.pageY - this.state.y
-    const numRows = 28
-    const numCols = 26
-    const rowHeight = this.state.height / numRows
-    const colWidth = this.state.width / numCols
+    const rowHeight = this.state.height / Board.numRows
+    const colWidth = this.state.width / Board.numCols
     const row = Math.floor(y / rowHeight)
     const col = Math.floor(x / colWidth)
 
@@ -445,7 +471,7 @@ class Board extends Component {
         undecidedTileRow = true
       }
     }
-    if (col >= numCols - 1) {
+    if (col >= Board.numCols - 1) {
       tileCol = 24
     } else if (col > 0) {
       tileCol = col
@@ -481,13 +507,126 @@ class Board extends Component {
     this.props.handleGridClick(tileRow, tileCol)
   }
 
+  /*
+   * w3 schools states @ https://www.w3schools.com/html/html5_draganddrop.asp:
+   * The ondragover event specifies where the dragged data can be dropped.
+   *
+   * By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element.
+   *
+   * This is done by calling the event.preventDefault() method for the ondragover event
+   */
+  handleDragOver = (e) => {
+    e.preventDefault()
+  }
+
+  handleDrop = (row, column, e) => {
+    e.preventDefault()
+
+    const data = e.dataTransfer.getData('application/json')
+
+    if (data) {
+      try {
+        const parsedData = JSON.parse(data)
+        this.props.onDrop(row, column, parsedData)
+        console.log('parsedData:', parsedData)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }
+
+  getGrid = () => {
+    if (!this.state.height || !this.state.width) {
+      return // better to dispay nothing than a skewed grid
+    }
+
+    const rows = []
+    const rowHeight = 2 * this.state.height / Board.numRows
+    const borderWidth = 0.3 // %
+    for (let i = 0; i < (Board.numRows / 3) - 1; i += 1) {
+      const spaces = []
+      const numCols = (Board.numCols / 2) - (i % 2)
+      for (let j = 0; j < numCols; j += 1) {
+        let childImg
+
+        if (this.props.buildingPlacement[i] && this.props.buildingPlacement[i][j]) {
+          const type = this.props.buildingPlacement[i][j]
+
+          childImg = img.black[type]
+        }
+
+        spaces.push(
+          <div
+            key={j}
+            style={{
+              width: `${100 / (Board.numCols / 2)}%`,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+            onDragOver={this.handleDragOver}
+            onDrop={(e) => this.handleDrop(i, j, e)}
+          >
+            {childImg &&
+              <img
+                src={childImg}
+                style={{ maxWidth: '100%', maxHeight: '100%' }}
+              />
+            }
+          </div>
+        )
+      }
+      rows.push(
+        <div
+          key={i}
+          style={{
+            height: rowHeight,
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              width: `${100 - borderWidth}%`,
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            {spaces}
+          </div>
+        </div>
+      )
+    }
+
+    return rows
+  }
+
   render() {
+    const boardStyle = {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }
+    const innerBodyStyle = {
+      width: '100%',
+      height: `${100 * (Board.numRows - 2) / Board.numRows}%`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    }
+
     return (
       <div
         ref={(div) => { this.div = div; }}
         onClick={this.handleClick}
-        style={{ width: '100%', height: '100%' }}
+        style={boardStyle}
       >
+        <div style={innerBodyStyle}>
+          {this.getGrid()}
+        </div>
       </div>
     )
   }

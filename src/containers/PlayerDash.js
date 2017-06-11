@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import * as actions from '../store'
 import PlayerBoard from '../components/PlayerBoard'
 // import nomadBoard from '../img/nomads_620_399.jpg'
 // import witchesBoard from '../img/witches_460_296.jpg'
 
+// TODO: most of the methods in this class are useless.
+// delete/replace them when possible.
 
-export default class PlayerDash extends Component {
+class PlayerDash extends Component {
   static propTypes = {
     boardImg: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -169,6 +174,13 @@ export default class PlayerDash extends Component {
       <div>
         <PlayerBoard
           boardImg={this.props.boardImg}
+
+          villageCount={this.props.villageCount}
+          tradePostCount={this.props.tradePostCount}
+          templeCount={this.props.templeCount}
+          strongholdCount={this.props.strongholdCount}
+          sanctuaryCount={this.props.sanctuaryCount}
+
           yourTurn={this.state.yourTurn}
           onPowerBowlClick={this.handlePowerBowlClick}
           onVillageDepotClick={this.handleVillageDepotClick}
@@ -184,3 +196,8 @@ export default class PlayerDash extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({ ...state })
+const mapDispatchToProps = (dispatch) => bindActionCreators(actions, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerDash)

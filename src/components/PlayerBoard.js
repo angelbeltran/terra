@@ -1,11 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
+import pillImg from '../img/pill.png'
+import workerImg from '../img/worker.png'
+import villageImg from '../img/village_black.png'
+import tradePostImg from '../img/tradepost_black.png'
+import templeImg from '../img/temple_black.png'
+import strongholdImg from '../img/stronghold_black.png'
+import sanctuaryImg from '../img/sanctuary_black.png'
+
+// TODO: replace tradepost with tradePost
 
 // nomad board: 620 x 399
 export default class PlayerBoard extends Component {
   static propTypes = {
+    villageCount: PropTypes.number.isRequired,
+    tradePostCount: PropTypes.number.isRequired,
+    templeCount: PropTypes.number.isRequired,
+    strongholdCount: PropTypes.number.isRequired,
+    sanctuaryCount: PropTypes.number.isRequired,
+
     yourTurn: PropTypes.bool.isRequired,
+
     onPowerBowlClick: PropTypes.func.isRequired,
     onVillageDepotClick: PropTypes.func.isRequired,
     onTradepostDepotClick: PropTypes.func.isRequired,
@@ -61,7 +77,7 @@ export default class PlayerBoard extends Component {
     this.props.onVillageDepotClick(id)
   }
 
-  handleTradepostDepotClick = (id) => {
+  handleTradePostDepotClick = (id) => {
     this.props.onTradepostDepotClick(id)
   }
 
@@ -152,8 +168,13 @@ export default class PlayerBoard extends Component {
                 <div style={{ height: '90%' }}>
                   <div style={{ width: '100%', height: '100%' }}>
                     <BuildingDepot
+                      villageCount={this.props.villageCount}
+                      tradePostCount={this.props.tradePostCount}
+                      templeCount={this.props.templeCount}
+                      strongholdCount={this.props.strongholdCount}
+                      sanctuaryCount={this.props.sanctuaryCount}
                       onVillageDepotClick={this.handleVillageDepotClick}
-                      onTradepostDepotClick={this.handleTradepostDepotClick}
+                      onTradepostDepotClick={this.handleTradePostDepotClick}
                       onTempleDepotClick={this.handleTempleDepotClick}
                       onStrongholdDepotClick={this.handleStrongholdDepotClick}
                       onStrongholdActionClick={this.handleStrongholdActionClick}
@@ -202,6 +223,8 @@ class PowerBowls extends Component {
           {/* Power bowl 2 */}
           <div style={{ height: '50%' }}>
             <div id="2" onClick={this.handleClick} style={{ width: '100%', height: '100%' }}>
+              <img src={pillImg} />
+              <img src={workerImg} />
             </div>
           </div>
           {/* Power bowl 1 */}
@@ -259,6 +282,12 @@ class ShovelTrack extends Component {
 
 class BuildingDepot extends Component {
   static propTypes = {
+    villageCount: PropTypes.number.isRequired,
+    tradePostCount: PropTypes.number.isRequired,
+    templeCount: PropTypes.number.isRequired,
+    strongholdCount: PropTypes.number.isRequired,
+    sanctuaryCount: PropTypes.number.isRequired,
+
     onVillageDepotClick: PropTypes.func.isRequired,
     onTradepostDepotClick: PropTypes.func.isRequired,
     onTempleDepotClick: PropTypes.func.isRequired,
@@ -271,7 +300,7 @@ class BuildingDepot extends Component {
     this.props.onVillageDepotClick(id)
   }
 
-  handleTradepostDepotClick = (id) => {
+  handleTradePostDepotClick = (id) => {
     this.props.onTradepostDepotClick(id)
   }
 
@@ -302,6 +331,7 @@ class BuildingDepot extends Component {
             </div>
             <div style={{ height: '79%' }}>
               <StrongholdDepot
+                count={this.props.strongholdCount}
                 onStrongholdDepotClick={this.handleStrongholdDepotClick}
                 onActionClick={this.handleStrongholdActionClick}
               />
@@ -315,6 +345,7 @@ class BuildingDepot extends Component {
             {/* Sanctuary */}
             <div style={{ height: '58%' }}>
               <SanctuaryDepot
+                count={this.props.sanctuaryCount}
                 onClick={this.handleSanctuaryDepotClick}
               />
             </div>
@@ -327,8 +358,9 @@ class BuildingDepot extends Component {
             </div>
             {/* Tradeposts */}
             <div style={{ height: '72%' }}>
-              <TradepostDepot
-                onClick={this.handleTradepostDepotClick}
+              <TradePostDepot
+                count={this.props.tradePostCount}
+                onClick={this.handleTradePostDepotClick}
               />
             </div>
           </div>
@@ -340,6 +372,7 @@ class BuildingDepot extends Component {
             {/* Temple */}
             <div style={{ height: '64%' }}>
               <TempleDepot
+                count={this.props.templeCount}
                 onClick={this.handleTempleDepotClick}
               />
             </div>
@@ -350,8 +383,9 @@ class BuildingDepot extends Component {
           <div style={{ width: '8.5%' }}>
           </div>
             {/* Village */}
-          <div style={{ width: '70%' }}>
+          <div style={{ width: '70%', height: '92%', }}>
             <VillageDepot
+              count={this.props.villageCount}
               onClick={this.handleVillageDepotClick}
             />
           </div>
@@ -361,10 +395,238 @@ class BuildingDepot extends Component {
   }
 }
 
-class StrongholdDepot extends Component {
+class DragAndDropDepot extends Component {
+  static propTypes = {
+    count: PropTypes.number.isRequired,
+    onClick: PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      // the dom element being dragged, if any
+      draggedElement: {},
+    }
+  }
+
+  /** This should be overwritten by the child class */
+  get buildingType() {
+    throw new Error('buildingType getter not implemented in child class of DragAndDropDepot')
+  }
+
+  handleClick = (e) => {
+    this.props.onClick(e.target.id)
+  }
+
+  handleDragStart = (e) => {
+    const data = {
+      type: this.buildingType,
+      id: e.target.id,
+    }
+
+    e.dataTransfer.setData('application/json', JSON.stringify(data))
+    // make the element somewhat transparent
+    e.target.style.opacity = 0.5
+    this.setState({
+      draggedElement: e.target
+    })
+  }
+
+  handleDragEnd = (e) => {
+    // make the transparent element opaque
+    this.state.draggedElement.style.opacity = 1
+    this.setState({
+      draggedElement: {},
+    })
+  }
+
+  render() {
+    throw new Error('render method not implemented in child class of DragAndDropDepot')
+    return
+  }
+}
+
+class VillageDepot extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
+
+  get buildingType() {
+    return 'village'
+  }
+
+  getVillages = () => {
+    const tileWidth = '10%'
+    const offset = '3%'
+    const villages = []
+
+    for (let i = 0; i < 8; i += 1) {
+      villages.push(
+        <div
+          key={i}
+          onClick={this.handleClick}
+          style={{ width: tileWidth, display: 'flex', alignItems: 'center', }}
+        >
+          {this.props.count + i >= 8 &&
+            <img
+              id={i}
+              src={villageImg}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+              }}
+              onDragEnd={this.handleDragEnd}
+              onDragStart={this.handleDragStart}
+            />
+          }
+        </div>
+      )
+    }
+
+    return villages
+  }
+
+  render() {
+    const tileWidth = '10%'
+    const offset = '3%'
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        {this.getVillages()}
+      </div>
+    )
+  }
+}
+
+class TradePostDepot extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
+
+  get buildingType() {
+    return 'tradePost'
+  }
+
+  getTradePosts = () => {
+    const numTradeposts = 4
+    const tradePosts = []
+    const tileWidth = '20.5%'
+
+    for (let i = 0; i < numTradeposts; i += 1) {
+      tradePosts.push(
+        <div
+          key={i}
+          id={i}
+          onClick={this.handleClick}
+          style={{
+            width: tileWidth,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {this.props.count + i >= 4 &&
+            <img
+              id={i}
+              src={tradePostImg}
+              style={{ maxWidth: '100%', maxHeight: '100%', }}
+              onDragEnd={this.handleDragEnd}
+              onDragStart={this.handleDragStart}
+            />
+          }
+        </div>
+      )
+    }
+
+    return tradePosts
+  }
+
+  render() {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        {this.getTradePosts()}
+      </div>
+    )
+  }
+}
+
+class TempleDepot extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
+
+  get buildingType() {
+    return 'temple'
+  }
+
+  getTemples = () => {
+    const numTemples = 3
+    const temples = []
+    const tileWidth = `${100 / numTemples}%`
+
+    for (let i = 0; i < numTemples; i += 1) {
+      temples.push(
+        <div
+          key={i}
+          id={i}
+          onClick={this.handleClick}
+          style={{
+            width: tileWidth,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {this.props.count + i >= 3 &&
+            <img
+              id={i}
+              src={templeImg}
+              style={{
+                maxWidth: '80%',
+                maxHeight: '80%',
+              }}
+              onDragEnd={this.handleDragEnd}
+              onDragStart={this.handleDragStart}
+            />
+          }
+        </div>
+      )
+    }
+
+    return temples
+  }
+
+  render() {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        {this.getTemples()}
+      </div>
+    )
+  }
+}
+
+class StrongholdDepot extends DragAndDropDepot {
+  // TODO: can we simplify the prop names?
   static propTypes = {
     onStrongholdDepotClick: PropTypes.func.isRequired,
     onActionClick: PropTypes.func.isRequired,
+  }
+
+  get buildingType() {
+    return 'stronghold'
   }
 
   handleStrongholdClick = () => {
@@ -377,9 +639,32 @@ class StrongholdDepot extends Component {
 
   render() {
     return (
-      <div style={{ display: 'flex', alignItems: 'flex-stretch', width: '100%', height: '100%' }}>
-        <div onClick={this.handleStrongholdClick} style={{ width: '48%' }}>
-          {/* Stronghold space */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-stretch',
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <div
+          onClick={this.handleStrongholdClick}
+          style={{
+            width: '48%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {this.props.count >= 1 &&
+            <img
+              id="0"
+              src={strongholdImg}
+              style={{ maxWidth: '100%', maxHeight: '100%', }}
+              onDragEnd={this.handleDragEnd}
+              onDragStart={this.handleDragStart}
+            />
+          }
         </div>
         <div style={{ width: '10%' }}>
         </div>
@@ -395,122 +680,34 @@ class StrongholdDepot extends Component {
   }
 }
 
-class SanctuaryDepot extends Component {
-  static propTypes = {
-    onClick: PropTypes.func.isRequired,
-  }
+class SanctuaryDepot extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
 
-  handleClick = () => {
-    this.props.onClick()
-  }
-
-  render() {
-    return (
-      <div onClick={this.handleClick} style={{ width: '100%', height: '100%'}}>
-        {/* Sanctuary space */}
-      </div>
-    )
-  }
-}
-
-class TradepostDepot extends Component {
-  static propTypes = {
-    onClick: PropTypes.func.isRequired,
-  }
-
-  handleClick = (e) => {
-    this.props.onClick(e.target.id)
+  get buildingType() {
+    return 'sanctuary'
   }
 
   render() {
     return (
-      <div style={{ display: 'flex', width: '100%', height: '100%'}}>
-        <div id="1" onClick={this.handleClick} style={{ width: '20.5%' }}>
-        </div>
-        <div style={{ width: '6.35%' }}>
-        </div>
-        <div id="2" onClick={this.handleClick} style={{ width: '20.5%' }}>
-        </div>
-        <div style={{ width: '6.35%' }}>
-        </div>
-        <div id="3" onClick={this.handleClick} style={{ width: '20.5%' }}>
-        </div>
-        <div style={{ width: '6.35%' }}>
-        </div>
-        <div id="4" onClick={this.handleClick} style={{ width: '20.5%' }}>
-        </div>
-      </div>
-    )
-  }
-}
-
-class TempleDepot extends Component {
-  static propTypes = {
-    onClick: PropTypes.func.isRequired,
-  }
-
-  handleClick = (e) => {
-    this.props.onClick(e.target.id)
-  }
-
-  render() {
-    return (
-      <div style={{ display: 'flex', width: '100%', height: '100%'}}>
-        <div id="1" onClick={this.handleClick} style={{ width: '33.33%' }}>
-        </div>
-        <div id="2" onClick={this.handleClick} style={{ width: '33.33%' }}>
-        </div>
-        <div id="3" onClick={this.handleClick} style={{ width: '33.33%' }}>
-        </div>
-      </div>
-    )
-  }
-}
-
-class VillageDepot extends Component {
-  static propTypes = {
-    onClick: PropTypes.func.isRequired,
-  }
-
-  handleClick = (e) => {
-    this.props.onClick(e.target.id)
-  }
-
-  render() {
-    const tileWidth = '10%'
-    const offset = '3%'
-    return (
-      <div style={{ display: 'flex', width: '100%', height: '100%'}}>
-        <div id="1" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
-        <div style={{ width: offset }}>
-        </div>
-        <div id="2" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
-        <div style={{ width: offset }}>
-        </div>
-        <div id="3" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
-        <div style={{ width: offset }}>
-        </div>
-        <div id="4" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
-        <div style={{ width: offset }}>
-        </div>
-        <div id="5" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
-        <div style={{ width: offset }}>
-        </div>
-        <div id="6" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
-        <div style={{ width: offset }}>
-        </div>
-        <div id="7" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
-        <div style={{ width: offset }}>
-        </div>
-        <div id="8" onClick={this.handleClick} style={{ width: tileWidth }}>
-        </div>
+      <div
+        onClick={this.handleClick}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {this.props.count >= 1 &&
+          <img
+            id="0"
+            src={sanctuaryImg}
+            style={{ maxWidth: '100%', maxHeight: '100%', }}
+            onDragEnd={this.handleDragEnd}
+            onDragStart={this.handleDragStart}
+          />
+        }
       </div>
     )
   }

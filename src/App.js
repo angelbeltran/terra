@@ -12,6 +12,8 @@ import dwarfsBoard from './img/dwarfs.jpg'
 import GameBoardContainer from './containers/GameBoardContainer'
 import gameBoard from './img/board_1500_1011.jpg'
 
+import pillImg from './img/pill.jpg'
+
 
 export default class App extends Component {
   render() {
@@ -19,7 +21,6 @@ export default class App extends Component {
       <div>
         <GameBoardContainer
           boardImg={gameBoard}
-          name="Bob"
         />
         <PlayerDash
           boardImg={dwarfsBoard}
@@ -29,6 +30,7 @@ export default class App extends Component {
           boardImg={aurenBoard}
           name="Billy"
         />
+        <img src={pillImg} />
       </div>
     )
   }

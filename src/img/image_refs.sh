@@ -70,3 +70,6 @@ for name in cover board cult_track bonus_scrolls alchemists auren chaos_magician
   echo "Downloaded $file_name"
   echo
 done
+
+
+# /camo/b4054d882a22f29eb723ca18bb52710054e9c03e/687474703a2f2f626f6172646f66706c6179696e672e636f6d2f776f726470726573732f77702d636f6e74656e742f75706c6f6164732f323031332f30352f66616374696f6e73312e6a7067  <-- race icons
