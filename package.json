@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "Angel Beltran",
+  "homepage": "https://angelbeltran.github.io/terra",
   "dependencies": {
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
