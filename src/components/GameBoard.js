@@ -570,6 +570,7 @@ class Board extends Component {
             {childImg &&
               <img
                 src={childImg}
+                alt=""
                 style={{ maxWidth: '100%', maxHeight: '100%' }}
               />
             }

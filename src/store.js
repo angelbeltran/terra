@@ -158,9 +158,8 @@ function rootReducer(state = initialState, action) {
       // first, verify that player is able to drop the given building on the space
       const { buildingType, id } = action
       const buildingCountProp = `${buildingType}Count`
-      const validBuildingPlaced = false
 
-      if (state[buildingCountProp] + parseInt(id) === maxNumOfBuildings[buildingType] &&
+      if (state[buildingCountProp] + parseInt(id, 10) === maxNumOfBuildings[buildingType] &&
           !state.buildingPlacement[action.row][action.column]) {
         // decrement the appropriate building count, and mark the building placement
         return {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import PlayerDash from './containers/PlayerDash'
 // import alchemistsBoard from './img/alchemists.jpg'
-import aurenBoard from './img/auren.jpg'
+// import aurenBoard from './img/auren.jpg'
 // import chaosMagiciansBoard from './img/chaos_magicians.jpg'
 // import cultistsBoard from './img/cultists.jpg'
 // import darklingsBoard from './img/darklings.jpg'
@@ -12,7 +12,7 @@ import dwarfsBoard from './img/dwarfs.jpg'
 import GameBoardContainer from './containers/GameBoardContainer'
 import gameBoard from './img/board_1500_1011.jpg'
 
-import pillImg from './img/pill.jpg'
+// import pillImg from './img/pill.jpg'
 
 
 export default class App extends Component {
@@ -26,12 +26,14 @@ export default class App extends Component {
           boardImg={dwarfsBoard}
           name="Bob"
         />
-        <PlayerDash
-          boardImg={aurenBoard}
-          name="Billy"
-        />
-        <img src={pillImg} />
       </div>
     )
   }
 }
+/*
+        <PlayerDash
+          boardImg={aurenBoard}
+          name="Billy"
+        />
+        <img src={pillImg} alt="" />
+*/

@@ -10,6 +10,7 @@ import strongholdImg from '../img/stronghold_black.png'
 import sanctuaryImg from '../img/sanctuary_black.png'
 
 // TODO: replace tradepost with tradePost
+// TODO: remove unused static variables
 
 // nomad board: 620 x 399
 export default class PlayerBoard extends Component {
@@ -44,7 +45,7 @@ export default class PlayerBoard extends Component {
     // backgroundImage: `url(${nomadBoard})`,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'contain',
-    position: 'relative',
+    position: 'relative', // TODO: Do we need this/
     height: 0,
     paddingTop: ((399 / 620) * 100) + '%', // '64.354838709%'
   }
@@ -111,83 +112,107 @@ export default class PlayerBoard extends Component {
       backgroundImage: `url(${this.props.boardImg})`,
     }
 
+
     return (
       <div style={boardStyle}>
-        <div style={PlayerBoard.BODY_STYLE}>
+        <div
+          style={{
+            /* PlayerBoard.BODY_STYLE */
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+          }}
+        >
           {/* Top part of board */}
-          <div style={PlayerBoard.TOP_STYLE}>
+          <div
+            style={{
+              height: `${PlayerBoard.TOP_RATIO}%`,
+              width: '100%',
+            }}
+          >
             {/* Power bowls */}
-            <div style={{ width: `${PlayerBoard.POWER_BOWL_RATIO}%`, display: 'flex' }}>
-              <div style={{ width: '7%' }}>
-              </div>
-
-              <div style={{ width: '87%' }}>
-                <div style={{ height: '7%' }}>
-                </div>
-
-                {/* Inner div that contains the bowls */}
-                <div style={{ height: '85%' }}>
-                  <PowerBowls onClick={this.handlePowerBowlClick} />
-                </div>
-
-                <div style={{ height: '8%' }}>
-                </div>
-              </div>
-
-              <div style={{ width: '6%' }}>
-              </div>
+            <div
+              style={{
+                position: 'relative',
+                top: '7%',
+                left: '3.5%',
+                height: '85%',
+                width: `${0.87 * PlayerBoard.POWER_BOWL_RATIO}%`,
+                display: 'inline-block',
+                verticalAlign: 'top',
+                // border: '2px solid blue',
+              }}
+            >
+              {/* Inner div that contains the bowls */}
+              <PowerBowls onClick={this.handlePowerBowlClick} />
             </div>
             {/* Terraforming */}
-            <div style={{ width: `${PlayerBoard.TERRAFORM_RATIO}%`, display: 'flex' }}>
-              <div style={{ width: '63%' }}>
-              </div>
-              <div style={{ width: '28%' }}>
-                <div style={{ height: '34%' }}>
-                </div>
-                <div style={{ height: '47%' }}>
-                  <ShovelTrack
-                    level={1}
-                    onClick={this.handleShovelTrackClick}
-                  />
-                </div>
-                <div style={{ height: '19%' }}>
-                </div>
-              </div>
-              <div style={{ width: '9%' }}>
-              </div>
+            <div
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                verticalAlign: 'top',
+                width: `${PlayerBoard.TERRAFORM_RATIO}%`,
+                width: `${0.255 * PlayerBoard.TERRAFORM_RATIO}%`,
+                position: 'relative',
+                top: '35.5%',
+                left: '39.7%',
+                height: '44.5%',
+                border: '2px solid blue',
+              }}
+            >
+              <ShovelTrack
+                level={1}
+                onClick={this.handleShovelTrackClick}
+              />
             </div>
           </div>
 
           {/* Bottom part of board */}
-          <div style={PlayerBoard.BOTTOM_STYLE}>
+          <div
+            style={{
+              height: `${PlayerBoard.BOTTOM_RATIO}%`,
+              // border: '2px solid blue',
+            }}
+          >
             {/* Buildings */}
-            <div style={{ width: `${PlayerBoard.BUILDINGS_RATIO}%`, display: 'flex', alignItems: 'flex-stretch' }}>
-              <div style={{ width: '14.5%' }}>
-              </div>
-              <div style={{ width: '76%' }}>
-                <div style={{ height: '90%' }}>
-                  <div style={{ width: '100%', height: '100%' }}>
-                    <BuildingDepot
-                      villageCount={this.props.villageCount}
-                      tradePostCount={this.props.tradePostCount}
-                      templeCount={this.props.templeCount}
-                      strongholdCount={this.props.strongholdCount}
-                      sanctuaryCount={this.props.sanctuaryCount}
-                      onVillageDepotClick={this.handleVillageDepotClick}
-                      onTradepostDepotClick={this.handleTradePostDepotClick}
-                      onTempleDepotClick={this.handleTempleDepotClick}
-                      onStrongholdDepotClick={this.handleStrongholdDepotClick}
-                      onStrongholdActionClick={this.handleStrongholdActionClick}
-                      onSanctuaryDepotClick={this.handleSanctuaryDepotClick}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div style={{ width: '9.5%' }}>
-              </div>
+            <div
+              style={{
+                position: 'relative',
+                left: '9.9%',
+                height: '88%',
+                width: '51.6%',
+                display: 'inline-block',
+                verticalAlign: 'top',
+                // border: '2px solid green',
+              }}
+            >
+              <BuildingDepot
+                villageCount={this.props.villageCount}
+                tradePostCount={this.props.tradePostCount}
+                templeCount={this.props.templeCount}
+                strongholdCount={this.props.strongholdCount}
+                sanctuaryCount={this.props.sanctuaryCount}
+                onVillageDepotClick={this.handleVillageDepotClick}
+                onTradepostDepotClick={this.handleTradePostDepotClick}
+                onTempleDepotClick={this.handleTempleDepotClick}
+                onStrongholdDepotClick={this.handleStrongholdDepotClick}
+                onStrongholdActionClick={this.handleStrongholdActionClick}
+                onSanctuaryDepotClick={this.handleSanctuaryDepotClick}
+              />
             </div>
             {/* Shipping & abilities */}
-            <div style={{ display: 'flex', width: `${PlayerBoard.SHIPPING_AND_ABILITY_RATIO}%` }}>
+            <div
+              style={{
+                display: 'flex',
+                height: '100%',
+                width: `${PlayerBoard.SHIPPING_AND_ABILITY_RATIO}%`
+                // display: 'inline-block',
+                // verticalAlign: 'top',
+              }}
+            >
               <div style={{ width: '26%' }}>
               </div>
               <div style={{ width: '56%' }}>
@@ -219,27 +244,171 @@ class PowerBowls extends Component {
   render() {
     return (
       <div style={{ width: '100%', height: '100%' }}>
-        <div style={{ display: 'inline-block', width: '50%', height: '100%' }}>
+        <div
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'top',
+            width: '50%',
+            height: '100%'
+          }}
+        >
           {/* Power bowl 2 */}
-          <div style={{ height: '50%' }}>
-            <div id="2" onClick={this.handleClick} style={{ width: '100%', height: '100%' }}>
-              <img src={pillImg} />
-              <img src={workerImg} />
+          <div
+            style={{
+              height: '50%',
+            }}
+          >
+            <div
+              id="2"
+              onClick={this.handleClick}
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignContent: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+
             </div>
           </div>
           {/* Power bowl 1 */}
           <div style={{ height: '50%' }}>
-            <div id="1" onClick={this.handleClick} style={{ width: '100%', height: '100%' }}>
+            <div
+              id="1"
+              onClick={this.handleClick}
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignContent: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+              <img
+                src={pillImg}
+                style={{
+                  width: '15%',
+                  height: 'auto',
+                }}
+                alt=""
+              />
+
             </div>
           </div>
         </div>
-        <div style={{ display: 'inline-block', width: '50%', height: '100%' }}>
-          <div style={{ height: '25%' }}>
-          </div>
+        <div
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'top',
+            width: '50%',
+            height: '100%'
+          }}
+        >
           {/* Power bowl 3 */}
-          <div id="3" onClick={this.handleClick} style={{ height: '50%' }}>
-          </div>
-          <div style={{ height: '25%' }}>
+          <div
+            id="3"
+            onClick={this.handleClick}
+            style={{
+              position: 'relative',
+              top: '25%',
+              height: '50%'
+            }}
+          >
           </div>
         </div>
       </div>
@@ -322,7 +491,15 @@ class BuildingDepot extends Component {
 
   render() {
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-stretch' }}>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-stretch'
+        }}
+      >
         {/* Top row */}
         <div style={{ height: '40%', display: 'flex' }}>
           <div style={{ width: '36%' }}>
@@ -395,6 +572,7 @@ class BuildingDepot extends Component {
   }
 }
 
+/* eslint-disable react/require-render-return */
 class DragAndDropDepot extends Component {
   static propTypes = {
     count: PropTypes.number.isRequired,
@@ -434,17 +612,20 @@ class DragAndDropDepot extends Component {
 
   handleDragEnd = (e) => {
     // make the transparent element opaque
-    this.state.draggedElement.style.opacity = 1
+    const style = this.state.draggedElement.style
+
     this.setState({
       draggedElement: {},
+    }, () => {
+      style.opacity = 1
     })
   }
 
   render() {
     throw new Error('render method not implemented in child class of DragAndDropDepot')
-    return
   }
 }
+/* eslint-enable react/require-render-return */
 
 class VillageDepot extends DragAndDropDepot {
   static propTypes = DragAndDropDepot.propTypes
@@ -455,7 +636,6 @@ class VillageDepot extends DragAndDropDepot {
 
   getVillages = () => {
     const tileWidth = '10%'
-    const offset = '3%'
     const villages = []
 
     for (let i = 0; i < 8; i += 1) {
@@ -469,6 +649,7 @@ class VillageDepot extends DragAndDropDepot {
             <img
               id={i}
               src={villageImg}
+              alt=""
               style={{
                 maxWidth: '100%',
                 maxHeight: '100%',
@@ -485,8 +666,6 @@ class VillageDepot extends DragAndDropDepot {
   }
 
   render() {
-    const tileWidth = '10%'
-    const offset = '3%'
     return (
       <div
         style={{
@@ -531,6 +710,7 @@ class TradePostDepot extends DragAndDropDepot {
             <img
               id={i}
               src={tradePostImg}
+              alt=""
               style={{ maxWidth: '100%', maxHeight: '100%', }}
               onDragEnd={this.handleDragEnd}
               onDragStart={this.handleDragStart}
@@ -588,6 +768,7 @@ class TempleDepot extends DragAndDropDepot {
             <img
               id={i}
               src={templeImg}
+              alt=""
               style={{
                 maxWidth: '80%',
                 maxHeight: '80%',
@@ -660,6 +841,7 @@ class StrongholdDepot extends DragAndDropDepot {
             <img
               id="0"
               src={strongholdImg}
+              alt=""
               style={{ maxWidth: '100%', maxHeight: '100%', }}
               onDragEnd={this.handleDragEnd}
               onDragStart={this.handleDragStart}
@@ -703,6 +885,7 @@ class SanctuaryDepot extends DragAndDropDepot {
           <img
             id="0"
             src={sanctuaryImg}
+            alt=""
             style={{ maxWidth: '100%', maxHeight: '100%', }}
             onDragEnd={this.handleDragEnd}
             onDragStart={this.handleDragStart}
