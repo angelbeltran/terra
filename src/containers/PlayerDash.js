@@ -12,8 +12,15 @@ import PlayerBoard from '../components/PlayerBoard'
 
 class PlayerDash extends Component {
   static propTypes = {
-    boardImg: PropTypes.string.isRequired,
+    className: PropTypes.string,
+    style: PropTypes.object,
     name: PropTypes.string.isRequired,
+  }
+
+  static defaultProps = {
+    className: '',
+    style: {},
+    name: '',
   }
 
   constructor(props) {
@@ -171,29 +178,56 @@ class PlayerDash extends Component {
 
   render() {
     return (
-      <div>
-        <PlayerBoard
-          boardImg={this.props.boardImg}
+      <div
+        className={`card ${this.props.className}`}
+        style={{
+          ...this.props.style,
+        }}
+      >
+        <div className="card-header">
+          <div className="row">
+            <div className="col-4">
+              <h3>Player Card</h3>
+            </div>
+            <div className="col-8 d-flex justify-content-end">
+              <select
+                onChange={(e) => this.props.changeRace(e.target.value)}
+              >
+                <option value="">select a race</option>
+                {this.props.races.map((race) => (
+                  <option key={race} value={race}>{race}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="card-body">
+          <PlayerBoard
+            race={this.props.race}
 
-          villageCount={this.props.villageCount}
-          tradePostCount={this.props.tradePostCount}
-          templeCount={this.props.templeCount}
-          strongholdCount={this.props.strongholdCount}
-          sanctuaryCount={this.props.sanctuaryCount}
+            villageCount={this.props.villageCount}
+            tradePostCount={this.props.tradePostCount}
+            templeCount={this.props.templeCount}
+            strongholdCount={this.props.strongholdCount}
+            sanctuaryCount={this.props.sanctuaryCount}
 
-          yourTurn={this.state.yourTurn}
-          onPowerBowlClick={this.handlePowerBowlClick}
-          onVillageDepotClick={this.handleVillageDepotClick}
-          onTradePostDepotClick={this.handleTradePostDepotClick}
-          onTempleDepotClick={this.handleTempleDepotClick}
-          onStrongholdDepotClick={this.handleStrongholdDepotClick}
-          onStrongholdActionClick={this.handleStrongholdActionClick}
-          onSanctuaryDepotClick={this.handleSanctuaryDepotClick}
-          onShovelTrackClick={this.handleShovelTrackClick}
-          onShippingTrackClick={this.handleShippingTrackClick}
-        />
+            yourTurn={this.state.yourTurn}
+            onPowerBowlClick={this.handlePowerBowlClick}
+            onVillageDepotClick={this.handleVillageDepotClick}
+            onTradePostDepotClick={this.handleTradePostDepotClick}
+            onTempleDepotClick={this.handleTempleDepotClick}
+            onStrongholdDepotClick={this.handleStrongholdDepotClick}
+            onStrongholdActionClick={this.handleStrongholdActionClick}
+            onSanctuaryDepotClick={this.handleSanctuaryDepotClick}
+            onShovelTrackClick={this.handleShovelTrackClick}
+            onShippingTrackClick={this.handleShippingTrackClick}
+          />
+        </div>
+        <div className="card-footer">
+          Footer
+        </div>
       </div>
-    );
+    )
   }
 }
 

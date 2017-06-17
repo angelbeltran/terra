@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
+import gameBoard from '../img/board_tabletopia_clean.jpg'
 import villageBlackImg from '../img/village_black.png'
 import tradePostBlackImg from '../img/tradepost_black.png'
 import templeBlackImg from '../img/temple_black.png'
@@ -32,7 +33,6 @@ const colors = {
 // 1370 x 916, ratio of board
 export default class GameBoard extends Component {
   static propTypes = {
-    boardImg: PropTypes.string.isRequired,
     onTrackClick: PropTypes.func.isRequired,
     // 0..5 -> bonus cards
     onBonusCardClick: PropTypes.func.isRequired,
@@ -115,7 +115,7 @@ export default class GameBoard extends Component {
           position: 'relative',
           height: 0,
           paddingTop: ((916 / 1370) * 100) + '%', // 1370 x 916, ratio of board
-          backgroundImage: `url(${this.props.boardImg})`,
+          backgroundImage: `url(${gameBoard})`,
         }}
       >
         <div

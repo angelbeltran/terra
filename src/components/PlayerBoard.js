@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
+import { races } from '../config'
 
 import pillImg from '../img/pill.png'
 //import workerImg from '../img/worker.png'
@@ -11,12 +12,28 @@ import sanctuaryImg from '../img/sanctuary_black.png'
 import actionTokenImg from '../img/action_token.png'
 import trackerImg from '../img/tracker_black.png'
 
+import chaosMagiciansBoardImg from '../img/chaos_magicians.jpg'
+import giantsBoardImg from '../img/giants.jpg'
+import nomadsBoardImg from '../img/nomads.jpg'
+import fakirsBoardImg from '../img/fakirs.jpg'
+import aurenBoardImg from '../img/auren.jpg'
+import witchesBoardImg from '../img/witches.jpg'
+import swarmlingsBoardImg from '../img/swarmlings.jpg'
+import mermaidsBoardImg from '../img/mermaids.png'
+import halflingsBoardImg from '../img/halflings.jpg'
+import cultistsBoardImg from '../img/cultists.jpg'
+import engineersBoardImg from '../img/engineers.jpg'
+import dwarfsBoardImg from '../img/dwarfs.jpg'
+import alchemistsBoardImg from '../img/alchemists.jpg'
+import darklingsBoardImg from '../img/darklings.jpg'
+
 // TODO: replace tradepost with tradePost
 // TODO: remove unused static variables
 
 // nomad board: 620 x 399
 export default class PlayerBoard extends Component {
   static propTypes = {
+    race: PropTypes.oneOf(races.concat('')),
     villageCount: PropTypes.number.isRequired,
     tradePostCount: PropTypes.number.isRequired,
     templeCount: PropTypes.number.isRequired,
@@ -108,12 +125,47 @@ export default class PlayerBoard extends Component {
     this.props.onShippingTrackClick(parseInt(distance, 10))
   }
 
+  getPlayerBoardUrl = (race = this.props.race) => {
+    switch (race) {
+      case 'chaos_magicians':
+        return chaosMagiciansBoardImg
+      case 'giants':
+        return giantsBoardImg
+      case 'nomads':
+        return nomadsBoardImg
+      case 'fakirs':
+        return fakirsBoardImg
+      case 'auren':
+        return aurenBoardImg
+      case 'witches':
+        return witchesBoardImg
+      case 'swarmlings':
+        return swarmlingsBoardImg
+      case 'mermaids':
+        return mermaidsBoardImg
+      case 'halflings':
+        return halflingsBoardImg
+      case 'cultists':
+        return cultistsBoardImg
+      case 'engineers':
+        return engineersBoardImg
+      case 'dwarfs':
+        return dwarfsBoardImg
+      case 'alchemists':
+        return alchemistsBoardImg
+      case 'darklings':
+        return darklingsBoardImg
+      default:
+        console.error('unrecognized race:', race)
+        return ''
+    }
+  }
+
   render() {
     const boardStyle = {
       ...PlayerBoard.BOARD_STYLE,
-      backgroundImage: `url(${this.props.boardImg})`,
+      backgroundImage: `url(${this.getPlayerBoardUrl()})`,
     }
-
 
     return (
       <div style={boardStyle}>

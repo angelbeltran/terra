@@ -7,6 +7,7 @@ import {
   MAX_TEMPLES,
   MAX_STRONGHOLDS,
   MAX_SANCTUARIES,
+  races,
 } from './config'
 
 const maxNumOfBuildings = {
@@ -23,6 +24,7 @@ const CLICK_BONUS_CARD = 'CLICK_BONUS_CARD'
 const CLICK_POWER_BONUS = 'CLICK_POWER_BONUS'
 const CLICK_GRID_SPACE = 'CLICK_GRID_SPACE'
 const DROP_ON_GRID_SPACE = 'DROP_ON_GRID_SPACE'
+const CHANGE_RACE = 'CHANGE_RACE'
 
 /* action creators */
 export function clickScoreTrack(score) {
@@ -65,8 +67,18 @@ export function dropOnGridSpace(row, column, { type, id }) {
   }
 }
 
+export function changeRace(race) {
+  return {
+    type: CHANGE_RACE,
+    race,
+  }
+}
+
 /* app reducer */
 const initialState = {
+  // config
+  races: races.slice(),
+
   // Game Board data
 
   bonusCards: {
@@ -118,6 +130,7 @@ const initialState = {
   },
 
   // Player data
+  race: races[Math.floor(Math.random() * races.length)],
   yourTurn: true,
   power: {
     1: 5,
@@ -176,6 +189,12 @@ function rootReducer(state = initialState, action) {
       }
       return state
 
+    case CHANGE_RACE:
+      console.log(`changing race to ${action.race}`)
+      return {
+        ...state,
+        race: races.includes(action.race) ? console.log('yolo') || action.race : state.race,
+      }
 
     default:
       return state
