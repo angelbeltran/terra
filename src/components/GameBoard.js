@@ -19,7 +19,7 @@ const img = {
 }
 
 
-// 1500 x 1011, ratio of board
+// 1370 x 916, ratio of board
 export default class GameBoard extends Component {
   static propTypes = {
     boardImg: PropTypes.string.isRequired,
@@ -36,155 +36,151 @@ export default class GameBoard extends Component {
     onGridDrop: PropTypes.func.isRequired,
   }
 
-  static TOP_RATIO = 94.9
-  static BOTTOM_RATIO = 100 - GameBoard.TOP_RATIO
-
-  static BOARD_STYLE = {
-    // backgroundImage: `url(${nomadBoard})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    position: 'relative',
-    height: 0,
-    paddingTop: ((1011 / 1500) * 100) + '%', // 1500 x 1011, ratio of board
-  }
-
-  static BODY_STYLE = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  }
-
-  static TOP_STYLE = {
-    display: 'flex',
-    alignItems: 'stretch',
-    height: `${GameBoard.TOP_RATIO}%`,
-  }
-  static BOTTOM_STYLE = {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: `${GameBoard.BOTTOM_RATIO}%`,
-  }
-
   render() {
-    const boardStyle = {
-      ...GameBoard.BOARD_STYLE,
-      backgroundImage: `url(${this.props.boardImg})`,
-    }
-
     return (
-      <div style={boardStyle}>
-        <div style={GameBoard.BODY_STYLE}>
-          {/* Everything but the bottom */}
-          <div style={GameBoard.TOP_STYLE}>
-            {/* Left column */}
-            <div style={{ width: '15.3%', display: 'flex', flexDirection: 'column' }}>
-              {/* Top left corner */}
-              <div style={{ height: '10%', display: 'flex', }}>
-                <div style={{ width: '2%' }}>
-                </div>
-                <div style={{ width: '98%', display: 'flex', flexDirection: 'column-reverse' }}>
-                  <div style={{ height: '94%' }}>
-                    <TopLeftScoreTrack
-                      onTrackClick={this.props.onTrackClick}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div style={{ height: '90%', display: 'flex' }}>
-                {/* Left side of track */}
-                <div style={{ width: '35%' }}>
-                  <div style={{ display: 'flex', height: '100%' }}>{/* TODO: can we remove height? */}
-                    <div style={{ width: '8%', }}>
-                    </div>
-                    <div style={{ width: '86%', }}>
-                      <LeftScoreTrack
-                        onTrackClick={this.props.onTrackClick}
-                      />
-                    </div>
-                  </div>
+      <div
+        style={{
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'contain',
+          position: 'relative',
+          height: 0,
+          paddingTop: ((916 / 1370) * 100) + '%', // 1370 x 916, ratio of board
+          backgroundImage: `url(${this.props.boardImg})`,
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: '0.95%',
+            bottom: '1.3%',
+            left: '0.8%',
+            right: '0.8%',
+          }}
+        >
 
-                </div>
-                {/* Bonus cards */}
-                <div style={{ width: '65%', display: 'flex' }}>
-                  <div style={{ width: '8%' }}>
-                  </div>
-                  <div style={{ width: '92%' }}>
-                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ height: '40.8%' }}>
-                      </div>
-                      <div style={{ height: '58.3%' }}>
-                        <BonusCards
-                          onBonusCardClick={this.props.onBonusCardClick}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Middle of board */}
-            <div style={{ width: '81.3%', display: 'flex', flexDirection: 'column' }}>
-              {/* Top row of score board */}
-              <div style={{ height: '0.7%' }}>
-              </div>
-              <div style={{ height: '4.5%' }}>
-                <TopScoreTrack
-                  onTrackClick={this.props.onTrackClick}
-                />
-              </div>
-              <div style={{ height: '6%' }}>
-              </div>
-              {/* Map */}
-              <div style={{ height: '77%', display: 'flex' }}>
-                <div style={{ width: '2.2%' }}>
-                </div>
-                <div style={{ width: '95.8%' }}>
-                  <Board
-                    handleGridClick={this.props.onGridClick}
-                    buildingPlacement={this.props.buildingPlacement}
-                    onDrop={this.props.onGridDrop}
-                  />
-                </div>
-              </div>
-              <div style={{ height: '3.9%' }}>
-              </div>
-              <div style={{ height: '5.7%', display: 'flex', }}>
-                <div style={{ width: '9%' }}>
-                </div>
-                {/* Power Store */}
-                <div style={{ width: '88.6%' }}>
-                  <PowerBonuses
-                    onPowerBonusClick={this.props.onPowerBonusClick}
-                  />
-                </div>
-              </div>
-            </div>
-            {/* Right side of scroe track */}
-            <div style={{ width: '3.1%', display: 'flex', }}>
-              <div style={{ width: '6%' }}>
-              </div>
-              <div style={{ width: '91%', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ height: '2%' }}>
-                </div>
-                <div style={{ height: '99%' }}>
-                  <RightScoreTrack
-                    onTrackClick={this.props.onTrackClick}
-                  />
-                </div>
-              </div>
-            </div>
+          {/* Everything but the bottom */}
+          {/* Left column */}
+
+          {/* Top left corner */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '0%',
+              left: '0%',
+              width: '18.7%',
+              height: '9%',
+            }}
+          >
+            <TopLeftScoreTrack
+              onTrackClick={this.props.onTrackClick}
+            />
           </div>
+
+          {/* Left side of track */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '8.8%',
+              left: '0%',
+              width: '5%',
+              height: '86.5%',
+            }}
+          >
+            <LeftScoreTrack
+              onTrackClick={this.props.onTrackClick}
+            />
+          </div>
+
+          {/* Bonus cards */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '44%',
+              left: '5.8%',
+              width: '9.2%',
+              height: '49.7%',
+            }}
+          >
+            <BonusCards
+              onBonusCardClick={this.props.onBonusCardClick}
+            />
+          </div>
+
+          {/* Top row of score board */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '18.7%',
+              width: '78%',
+              height: '5%',
+            }}
+          >
+            <TopScoreTrack
+              onTrackClick={this.props.onTrackClick}
+            />
+          </div>
+
+          {/* Map */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '10.2%',
+              left: '16.8%',
+              width: '78.11%',
+              height: '73.23%',
+            }}
+          >
+            <Board
+              handleGridClick={this.props.onGridClick}
+              buildingPlacement={this.props.buildingPlacement}
+              onDrop={this.props.onGridDrop}
+            />
+          </div>
+
+          {/* Power Bonuses */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '87.2%',
+              left: '22.2%',
+              width: '72.54%',
+              height: '5.5%',
+            }}
+          >
+            <PowerBonuses
+              onPowerBonusClick={this.props.onPowerBonusClick}
+            />
+          </div>
+
+          {/* Right side of score track */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '0%',
+              right: '0%',
+              bottom: '0%',
+              width: '3.4%',
+              height: '95.5%',
+            }}
+          >
+            <RightScoreTrack
+              onTrackClick={this.props.onTrackClick}
+            />
+          </div>
+
           {/* Bottom score row */}
-          <div style={GameBoard.BOTTOM_STYLE}>
-            <div style={{ height: '80%', width: '99%', }}>
-              <BottomScoreTrack
-                onTrackClick={this.props.onTrackClick}
-              />
-            </div>
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '0%',
+              left: '0%',
+              right: '0%',
+              height: '4.8%',
+            }}
+          >
+            <BottomScoreTrack
+              onTrackClick={this.props.onTrackClick}
+            />
           </div>
         </div>
       </div>

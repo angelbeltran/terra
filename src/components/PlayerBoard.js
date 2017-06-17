@@ -9,6 +9,7 @@ import templeImg from '../img/temple_black.png'
 import strongholdImg from '../img/stronghold_black.png'
 import sanctuaryImg from '../img/sanctuary_black.png'
 import actionTokenImg from '../img/action_token.png'
+import trackerImg from '../img/tracker_black.png'
 
 // TODO: replace tradepost with tradePost
 // TODO: remove unused static variables
@@ -26,7 +27,7 @@ export default class PlayerBoard extends Component {
 
     onPowerBowlClick: PropTypes.func.isRequired,
     onVillageDepotClick: PropTypes.func.isRequired,
-    onTradepostDepotClick: PropTypes.func.isRequired,
+    onTradePostDepotClick: PropTypes.func.isRequired,
     onTempleDepotClick: PropTypes.func.isRequired,
     onStrongholdDepotClick: PropTypes.func.isRequired,
     onStrongholdActionClick: PropTypes.func.isRequired,
@@ -80,7 +81,7 @@ export default class PlayerBoard extends Component {
   }
 
   handleTradePostDepotClick = (id) => {
-    this.props.onTradepostDepotClick(id)
+    this.props.onTradePostDepotClick(id)
   }
 
   handleTempleDepotClick = (id) => {
@@ -152,16 +153,14 @@ export default class PlayerBoard extends Component {
           <div
             style={{
               position: 'absolute',
-              top: '18.5%',
-              left: '81.5%',
-              width: '13.3%',
-              height: '22.8%',
-              // border: '2px solid blue',
-              verticalAlign: 'top',
+              top: '18.25%',
+              left: '81.3%',
+              width: '13.8%',
+              height: '23.45%',
             }}
           >
             <ShovelTrack
-              level={1}
+              count={this.props.shovelLevel}
               onClick={this.handleShovelTrackClick}
             />
           </div>
@@ -187,7 +186,7 @@ export default class PlayerBoard extends Component {
               strongholdCount={this.props.strongholdCount}
               sanctuaryCount={this.props.sanctuaryCount}
               onVillageDepotClick={this.handleVillageDepotClick}
-              onTradepostDepotClick={this.handleTradePostDepotClick}
+              onTradePostDepotClick={this.handleTradePostDepotClick}
               onTempleDepotClick={this.handleTempleDepotClick}
               onStrongholdDepotClick={this.handleStrongholdDepotClick}
               onStrongholdActionClick={this.handleStrongholdActionClick}
@@ -198,10 +197,10 @@ export default class PlayerBoard extends Component {
           <div
             style={{
               position: 'absolute',
-              top: '56%',
-              left: '76.5%',
-              height: '13.6%',
-              width: '17.6%',
+              top: '55.8%',
+              left: '76.2%',
+              height: '13.8%',
+              width: '18%',
             }}
           >
             <ShippingTrack onClick={this.handleShippingTrackClick} />
@@ -323,34 +322,120 @@ class PowerBowls extends Component {
   }
 }
 
-class ShovelTrack extends Component {
+/* eslint-disable react/require-render-return */
+class DragAndDropDepot extends Component {
   static propTypes = {
-    level: PropTypes.number.isRequired,
+    count: PropTypes.number.isRequired,
     onClick: PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      // the dom element being dragged, if any
+      draggedElement: {},
+    }
+  }
+
+  /** This should be overwritten by the child class */
+  get buildingType() {
+    throw new Error('buildingType getter not implemented in child class of DragAndDropDepot')
   }
 
   handleClick = (e) => {
     this.props.onClick(e.target.id)
   }
 
+  handleDragStart = (e) => {
+    const data = {
+      type: this.buildingType,
+      id: e.target.id,
+    }
+
+    e.dataTransfer.setData('application/json', JSON.stringify(data))
+    // make the element somewhat transparent
+    e.target.style.opacity = 0.5
+    this.setState({
+      draggedElement: e.target
+    })
+  }
+
+  handleDragEnd = (e) => {
+    // make the transparent element opaque
+    const style = this.state.draggedElement.style
+
+    this.setState({
+      draggedElement: {},
+    }, () => {
+      style.opacity = 1
+    })
+  }
+
+  render() {
+    throw new Error('render method not implemented in child class of DragAndDropDepot')
+  }
+}
+/* eslint-enable react/require-render-return */
+
+class ShovelTrack extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
+
+  static defaultProps = {
+    count: 0,
+  }
+
+  get buildingType() {
+    return 'shovelTracker'
+  }
+
+  handleClick = (e) => {
+    this.props.onClick(e.target.id)
+  }
+
+  getSpaces = () => {
+    const spaces = []
+
+    for (let i = 0; i < 3; i += 1) {
+      spaces.push(
+        <div
+          key={2 - i}
+          style={{
+            width: '33.3%',
+            height: '33.3%',
+          }}
+        >
+          {this.props.count === i &&
+            <img
+              src={trackerImg}
+              alt=""
+              style={{
+                position: 'absolute',
+                top: `${(33.3 * (2 - i)) - 7}%`,
+                left: '5.5%',
+                width: '22.5%',
+                height: 'auto',
+              }}
+              onClick={this.handleClick}
+              onDragEnd={this.handleDragEnd}
+              onDragStart={this.handleDragStart}
+            />
+          }
+        </div>
+      )
+    }
+
+    return spaces
+  }
+
   render() {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-        <div style={{ flexGrow: 1, display: 'flex', alignItems: 'flex-stretch' }}>
-          <div id="3" onClick={this.handleClick} style={{ width: '37%' }}>
-            {/* Token goes here on level 3 */}
-          </div>
-        </div>
-        <div style={{ flexGrow: 1, display: 'flex', alignItems: 'flex-stretch' }}>
-          <div id="2" onClick={this.handleClick} style={{ width: '37%' }}>
-            {/* Token goes here on level 2 */}
-          </div>
-        </div>
-        <div style={{ flexGrow: 1, display: 'flex', alignItems: 'flex-stretch' }}>
-          <div id="1" onClick={this.handleClick} style={{ width: '37%' }}>
-            {/* Token goes here on level 1 */}
-          </div>
-        </div>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        {this.getSpaces()}
       </div>
     )
   }
@@ -365,7 +450,7 @@ class BuildingDepot extends Component {
     sanctuaryCount: PropTypes.number.isRequired,
 
     onVillageDepotClick: PropTypes.func.isRequired,
-    onTradepostDepotClick: PropTypes.func.isRequired,
+    onTradePostDepotClick: PropTypes.func.isRequired,
     onTempleDepotClick: PropTypes.func.isRequired,
     onStrongholdDepotClick: PropTypes.func.isRequired,
     onStrongholdActionClick: PropTypes.func.isRequired,
@@ -377,7 +462,7 @@ class BuildingDepot extends Component {
   }
 
   handleTradePostDepotClick = (id) => {
-    this.props.onTradepostDepotClick(id)
+    this.props.onTradePostDepotClick(id)
   }
 
   handleTempleDepotClick = (id) => {
@@ -507,63 +592,155 @@ class BuildingDepot extends Component {
   }
 }
 
-/* eslint-disable react/require-render-return */
-class DragAndDropDepot extends Component {
-  static propTypes = {
-    count: PropTypes.number.isRequired,
-    onClick: PropTypes.func.isRequired,
-  }
+class VillageDepot extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      // the dom element being dragged, if any
-      draggedElement: {},
-    }
-  }
-
-  /** This should be overwritten by the child class */
   get buildingType() {
-    throw new Error('buildingType getter not implemented in child class of DragAndDropDepot')
+    return 'village'
   }
 
-  handleClick = (e) => {
-    this.props.onClick(e.target.id)
-  }
+  getVillages = () => {
+    const villages = []
 
-  handleDragStart = (e) => {
-    const data = {
-      type: this.buildingType,
-      id: e.target.id,
+    for (let i = 0; i < 8; i += 1) {
+      villages.push(
+        this.props.count + i >= 8 &&
+          <img
+            key={i}
+            id={i}
+            src={villageImg}
+            alt=""
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: `${(12.92 * i) - 1.5}%`,
+              width: '12.5%',
+              height: 'auto',
+            }}
+            onClick={this.handleClick}
+            onDragEnd={this.handleDragEnd}
+            onDragStart={this.handleDragStart}
+          />
+      )
     }
 
-    e.dataTransfer.setData('application/json', JSON.stringify(data))
-    // make the element somewhat transparent
-    e.target.style.opacity = 0.5
-    this.setState({
-      draggedElement: e.target
-    })
-  }
-
-  handleDragEnd = (e) => {
-    // make the transparent element opaque
-    const style = this.state.draggedElement.style
-
-    this.setState({
-      draggedElement: {},
-    }, () => {
-      style.opacity = 1
-    })
+    return villages
   }
 
   render() {
-    throw new Error('render method not implemented in child class of DragAndDropDepot')
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        {this.getVillages()}
+      </div>
+    )
   }
 }
-/* eslint-enable react/require-render-return */
+
+class TradePostDepot extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
+
+  get buildingType() {
+    return 'tradePost'
+  }
+
+  getTradePosts = () => {
+    const numTradePosts = 4
+    const tradePosts = []
+
+    for (let i = 0; i < numTradePosts; i += 1) {
+      tradePosts.push(
+        this.props.count + i >= 4 &&
+          <img
+            key={i}
+            id={i}
+            src={tradePostImg}
+            alt=""
+            style={{
+              position: 'absolute',
+              top: '10%',
+              left: `${(27 * i) - 4}%`,
+              width: '27%',
+              height: 'auto',
+            }}
+            onClick={this.handleClick}
+            onDragEnd={this.handleDragEnd}
+            onDragStart={this.handleDragStart}
+          />
+      )
+    }
+
+    return tradePosts
+  }
+
+  render() {
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        {this.getTradePosts()}
+      </div>
+    )
+  }
+}
+
+class TempleDepot extends DragAndDropDepot {
+  static propTypes = DragAndDropDepot.propTypes
+
+  get buildingType() {
+    return 'temple'
+  }
+
+  getTemples = () => {
+    const numTemples = 3
+    const temples = []
+
+    for (let i = 0; i < numTemples; i += 1) {
+      temples.push(
+        this.props.count + i >= 3 &&
+          <img
+            key={i}
+            id={i}
+            src={templeImg}
+            alt=""
+            style={{
+              position: 'absolute',
+              left: `${(34.4 * i) + 1.5}%`,
+              width: `${28}%`,
+              height: 'auto',
+            }}
+            onClick={this.handleClick}
+            onDragEnd={this.handleDragEnd}
+            onDragStart={this.handleDragStart}
+          />
+      )
+    }
+
+    return temples
+  }
+
+  render() {
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        {this.getTemples()}
+      </div>
+    )
+  }
+}
 
 class StrongholdDepot extends DragAndDropDepot {
-  // TODO: can we simplify the prop names?
   static propTypes = {
     count: PropTypes.number,
     onClick: PropTypes.func.isRequired,
@@ -583,8 +760,6 @@ class StrongholdDepot extends DragAndDropDepot {
         style={{
           width: '100%',
           height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
         }}
         onClick={this.props.onClick}
       >
@@ -593,7 +768,13 @@ class StrongholdDepot extends DragAndDropDepot {
             id="0"
             src={strongholdImg}
             alt=""
-            style={{ maxWidth: '100%', maxHeight: '100%', }}
+            style={{
+              position: 'absolute',
+              top: '-10%',
+              left: '5%',
+              width: '90%', 
+              height: 'auto',
+            }}
             onDragEnd={this.handleDragEnd}
             onDragStart={this.handleDragStart}
           />
@@ -665,9 +846,6 @@ class SanctuaryDepot extends DragAndDropDepot {
         style={{
           width: '100%',
           height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
         }}
       >
         {this.props.count >= 1 &&
@@ -676,7 +854,10 @@ class SanctuaryDepot extends DragAndDropDepot {
             src={sanctuaryImg}
             alt=""
             style={{
-              width: '75%',
+              position: 'absolute',
+              top: '-45%',
+              left: '12%',
+              width: '76%',
               height: 'auto',
             }}
             onDragEnd={this.handleDragEnd}
@@ -688,212 +869,68 @@ class SanctuaryDepot extends DragAndDropDepot {
   }
 }
 
-class TradePostDepot extends DragAndDropDepot {
+class ShippingTrack extends DragAndDropDepot {
   static propTypes = DragAndDropDepot.propTypes
 
-  get buildingType() {
-    return 'tradePost'
+  static defaultProps = {
+    count: 0,
   }
-
-  getTradePosts = () => {
-    const numTradeposts = 4
-    const tradePosts = []
-    const tileWidth = '20.5%'
-
-    for (let i = 0; i < numTradeposts; i += 1) {
-      tradePosts.push(
-        <div
-          key={i}
-          id={i}
-          onClick={this.handleClick}
-          style={{
-            width: tileWidth,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {this.props.count + i >= 4 &&
-            <img
-              id={i}
-              src={tradePostImg}
-              alt=""
-              style={{ maxWidth: '100%', maxHeight: '100%', }}
-              onDragEnd={this.handleDragEnd}
-              onDragStart={this.handleDragStart}
-            />
-          }
-        </div>
-      )
-    }
-
-    return tradePosts
-  }
-
-  render() {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-          height: '100%'
-        }}
-      >
-        {this.getTradePosts()}
-      </div>
-    )
-  }
-}
-
-class TempleDepot extends DragAndDropDepot {
-  static propTypes = DragAndDropDepot.propTypes
 
   get buildingType() {
-    return 'temple'
-  }
-
-  getTemples = () => {
-    const numTemples = 3
-    const temples = []
-    const bufferWidth = 2.5
-    const totalBufferSpace = (numTemples - 1) * bufferWidth
-    const tileWidth = ((100 - totalBufferSpace) / numTemples)
-
-    // const tileWidth = `${100 / numTemples}%`
-
-    for (let i = 0; i < numTemples; i += 1) {
-      temples.push(
-        <div
-          key={i}
-          id={i}
-          onClick={this.handleClick}
-          style={{
-            position: 'absolute',
-            left: `${(tileWidth + bufferWidth) * i}%`,
-            width: `${tileWidth}%`,
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {this.props.count + i >= 3 &&
-            <img
-              id={i}
-              src={templeImg}
-              alt=""
-              style={{
-                maxWidth: '80%',
-                maxHeight: '80%',
-              }}
-              onDragEnd={this.handleDragEnd}
-              onDragStart={this.handleDragStart}
-            />
-          }
-        </div>
-      )
-    }
-
-    return temples
-  }
-
-  render() {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '100%'
-        }}
-      >
-        {this.getTemples()}
-      </div>
-    )
-  }
-}
-
-class VillageDepot extends DragAndDropDepot {
-  static propTypes = DragAndDropDepot.propTypes
-
-  get buildingType() {
-    return 'village'
-  }
-
-  getVillages = () => {
-    const tileWidth = '10%'
-    const villages = []
-
-    for (let i = 0; i < 8; i += 1) {
-      villages.push(
-        <div
-          key={i}
-          onClick={this.handleClick}
-          style={{ width: tileWidth, display: 'flex', alignItems: 'center', }}
-        >
-          {this.props.count + i >= 8 &&
-            <img
-              id={i}
-              src={villageImg}
-              alt=""
-              style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-              }}
-              onDragEnd={this.handleDragEnd}
-              onDragStart={this.handleDragStart}
-            />
-          }
-        </div>
-      )
-    }
-
-    return villages
-  }
-
-  render() {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-          height: '100%',
-        }}
-      >
-        {this.getVillages()}
-      </div>
-    )
-  }
-}
-
-class ShippingTrack extends Component {
-  static propTypes = {
-    onClick: PropTypes.func.isRequired,
+    return 'shippingTracker'
   }
 
   handleClick = (e) => {
     this.props.onClick(e.target.id)
   }
 
+  getSpaces = () => {
+    const spaces = []
+
+    for (let i = 0; i < 4; i += 1) {
+      spaces.push(
+        <div
+          key={i}
+          id={i}
+          style={{
+            position: 'absolute',
+            top: '-16%',
+            left: `${4 + (i * 25.2)}%`,
+            width: '18%',
+            height: 'auto',
+          }}
+        >
+          {this.props.count === i &&
+            <img
+              id={this.props.count}
+              src={trackerImg}
+              style={{
+                width: '100%',
+                height: 'auto',
+              }}
+              alt=""
+              onClick={this.handleClick}
+              onDragEnd={this.handleDragEnd}
+              onDragStart={this.handleDragStart}
+            />
+          }
+        </div>
+      )
+    }
+
+    return spaces
+  }
+
+  // TODO: you forgot to make the divs
   render() {
     return (
-      <div style={{ display: 'flex', alignItems: 'flex-stretch', width: '100%', height: '100%' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', width: '25%' }}>
-          <div id="0" onClick={this.handleClick} style={{ height: '47%' }}>
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', width: '25%' }}>
-          <div id="1" onClick={this.handleClick} style={{ height: '47%' }}>
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', width: '25%' }}>
-          <div id="2" onClick={this.handleClick} style={{ height: '47%' }}>
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', width: '25%' }}>
-          <div id="3" onClick={this.handleClick} style={{ height: '47%' }}>
-          </div>
-        </div>
+      <div
+        style={{
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        {this.getSpaces()}
       </div>
     )
   }

@@ -10,7 +10,7 @@ import aurenBoard from './img/auren.jpg'
 // import nomadBoard from './img/nomads.jpg'
 
 import GameBoardContainer from './containers/GameBoardContainer'
-import gameBoard from './img/board_1500_1011.jpg'
+import gameBoard from './img/board_tabletopia_clean.jpg'
 
 // import pillImg from './img/pill.jpg'
 

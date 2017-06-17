@@ -27,7 +27,7 @@ class PlayerDash extends Component {
         3: 0,
       },
       villages: 8,
-      tradeposts: 4,
+      tradePosts: 4,
       temples: 3,
       strongholds: 1,
       strongholdActionTaken: false,
@@ -95,24 +95,24 @@ class PlayerDash extends Component {
     }
   }
 
-  incrementTradeposts = (n = 1) => {
-    let m = this.state.tradeposts + n
+  incrementTradePosts = (n = 1) => {
+    let m = this.state.tradePosts + n
 
     if (m > 4) {
       m = 4
     }
 
     this.setState({
-      tradeposts: m,
+      tradePosts: m,
     })
   }
 
-  handleTradepostDepotClick = (id) => {
+  handleTradePostDepotClick = (id) => {
     // DEV
-    if (parseInt(id, 10) + this.state.tradeposts === 5) {
+    if (parseInt(id, 10) + this.state.tradePosts === 5) {
       this.setState({
-        tradeposts: this.state.tradeposts - 1,
-      }, () => console.log(`TRADEPOSTS: ${this.state.tradeposts}`))
+        tradePosts: this.state.tradePosts - 1,
+      }, () => console.log(`TRADEPOSTS: ${this.state.tradePosts}`))
     }
   }
 
@@ -184,7 +184,7 @@ class PlayerDash extends Component {
           yourTurn={this.state.yourTurn}
           onPowerBowlClick={this.handlePowerBowlClick}
           onVillageDepotClick={this.handleVillageDepotClick}
-          onTradepostDepotClick={this.handleTradepostDepotClick}
+          onTradePostDepotClick={this.handleTradePostDepotClick}
           onTempleDepotClick={this.handleTempleDepotClick}
           onStrongholdDepotClick={this.handleStrongholdDepotClick}
           onStrongholdActionClick={this.handleStrongholdActionClick}
