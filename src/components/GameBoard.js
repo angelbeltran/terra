@@ -6,6 +6,7 @@ import tradePostBlackImg from '../img/tradepost_black.png'
 import templeBlackImg from '../img/temple_black.png'
 import strongholdImg from '../img/stronghold_black.png'
 import sanctuaryImg from '../img/sanctuary_black.png'
+import trackerImg from '../img/tracker_black.png'
 
 
 const img = {
@@ -16,6 +17,15 @@ const img = {
     stronghold: strongholdImg,
     sanctuary: sanctuaryImg,
   },
+}
+const colors = {
+  red: 'red',
+  yellow: 'yellow',
+  green: 'green',
+  blue: 'blue',
+  brown: 'brown',
+  gray: 'gray',
+  black: 'black',
 }
 
 
@@ -34,11 +44,71 @@ export default class GameBoard extends Component {
     buildingPlacement: PropTypes.object.isRequired,
     // when a thing is placed on the board
     onGridDrop: PropTypes.func.isRequired,
+    // positions of score tracking tokens,
+    scores: PropTypes.objectOf(
+      PropTypes.arrayOf(
+        PropTypes.oneOf(
+          Object.keys(colors)
+        )
+      )
+    ).isRequired,
   }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      // x: -1,
+      // y: -1,
+      width: -1,
+      height: -1,
+    }
+
+    this.updateDimensions = this.updateDimensions.bind(this)
+  }
+
+  /*
+  componentWillMount = () => {
+    // this.updateDimensions()
+  }
+  */
+
+  componentDidMount = () => {
+    window.addEventListener('resize', this.updateDimensions, false)
+    this.setState({
+      // x: this.div.offsetLeft,
+      // y: this.div.offsetTop,
+      width: this.div.clientWidth,
+      height: this.div.clientHeight,
+    })
+  }
+
+
+  componentWillUnmount = () => {
+    window.addRemoveListener('resize', this.updateDimensions, false)
+  }
+
+  updateDimensions = () => {
+    this.setState({
+      // x: this.div.offsetLeft,
+      // y: this.div.offsetTop,
+      width: this.div.clientWidth,
+      height: this.div.clientHeight,
+    })
+  }
+
+  getScoreTrackTokens = (space) =>
+    (this.props.scores[space] || []).map((color, index) =>
+      <TrackerImg
+        key={color}
+        color={color}
+        width={`${this.state.width / 60}px`}
+      />
+    )
 
   render() {
     return (
       <div
+        ref={(div) => { this.div = div; }}
         style={{
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'contain',
@@ -58,51 +128,96 @@ export default class GameBoard extends Component {
           }}
         >
 
-          {/* Everything but the bottom */}
-          {/* Left column */}
-
           {/* Top left corner */}
-          <div
+          <TrackSquare
             style={{
               position: 'absolute',
-              top: '0%',
-              left: '0%',
-              width: '18.7%',
-              height: '9%',
+              top: '22.1%',
+              width: '3.7774%',
             }}
+            onClick={() => this.props.onTrackClick(17)}
           >
-            <TopLeftScoreTrack
-              onTrackClick={this.props.onTrackClick}
-            />
-          </div>
+            {this.getScoreTrackTokens(17)}
+          </TrackSquare>
+
+          <TrackSquare
+            style={{
+              position: 'absolute',
+              top: '16.3%',
+              width: '3.9644%',
+            }}
+            onClick={() => this.props.onTrackClick(18)}
+          >
+            {this.getScoreTrackTokens(18)}
+          </TrackSquare>
+
+          <TrackSquare
+            style={{
+              position: 'absolute',
+              top: '8.9%',
+              width: '4.8994%',
+            }}
+            onClick={() => this.props.onTrackClick(19)}
+          >
+            {this.getScoreTrackTokens(19)}
+          </TrackSquare>
+
+          <TrackSquare
+            style={{
+              position: 'absolute',
+              width: '6.0588%',
+            }}
+            onClick={() => this.props.onTrackClick(20)}
+          >
+            {this.getScoreTrackTokens(20)}
+          </TrackSquare>
+
+          <TrackSquare
+            style={{
+              position: 'absolute',
+              left: '6.0588%',
+              width: '4.8994%',
+            }}
+            onClick={() => this.props.onTrackClick(21)}
+          >
+            {this.getScoreTrackTokens(21)}
+          </TrackSquare>
+
+          <TrackSquare
+            style={{
+              position: 'absolute',
+              left: '10.9582%',
+              width: '3.9644%',
+            }}
+            onClick={() => this.props.onTrackClick(22)}
+          >
+            {this.getScoreTrackTokens(22)}
+          </TrackSquare>
+
+          <TrackSquare
+            style={{
+              position: 'absolute',
+              left: '14.9226%',
+              width: '3.7774%',
+            }}
+            onClick={() => this.props.onTrackClick(23)}
+          >
+            {this.getScoreTrackTokens(23)}
+          </TrackSquare>
 
           {/* Left side of track */}
           <div
             style={{
               position: 'absolute',
-              top: '8.8%',
+              top: '28%',
               left: '0%',
-              width: '5%',
-              height: '86.5%',
+              width: '3.2%',
+              height: '72%',
             }}
           >
             <LeftScoreTrack
-              onTrackClick={this.props.onTrackClick}
-            />
-          </div>
-
-          {/* Bonus cards */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '44%',
-              left: '5.8%',
-              width: '9.2%',
-              height: '49.7%',
-            }}
-          >
-            <BonusCards
-              onBonusCardClick={this.props.onBonusCardClick}
+              onClick={this.props.onTrackClick}
+              getScoreTrackTokens={this.getScoreTrackTokens}
             />
           </div>
 
@@ -112,11 +227,45 @@ export default class GameBoard extends Component {
               position: 'absolute',
               left: '18.7%',
               width: '78%',
-              height: '5%',
+              height: '4.7%',
             }}
           >
             <TopScoreTrack
-              onTrackClick={this.props.onTrackClick}
+              onClick={this.props.onTrackClick}
+              getScoreTrackTokens={this.getScoreTrackTokens}
+            />
+          </div>
+
+          {/* Bottom score row */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '0%',
+              left: '0%',
+              right: '0%',
+              height: '4.8%',
+            }}
+          >
+            <BottomScoreTrack
+              onClick={this.props.onTrackClick}
+              getScoreTrackTokens={this.getScoreTrackTokens}
+            />
+          </div>
+
+          {/* Right side of score track */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '0%',
+              right: '0%',
+              bottom: '0%',
+              width: '3.4%',
+              height: '95.5%',
+            }}
+          >
+            <RightScoreTrack
+              onClick={this.props.onTrackClick}
+              getScoreTrackTokens={this.getScoreTrackTokens}
             />
           </div>
 
@@ -137,6 +286,21 @@ export default class GameBoard extends Component {
             />
           </div>
 
+          {/* Bonus cards */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '44%',
+              left: '5.8%',
+              width: '9.2%',
+              height: '49.7%',
+            }}
+          >
+            <BonusCards
+              onBonusCardClick={this.props.onBonusCardClick}
+            />
+          </div>
+
           {/* Power Bonuses */}
           <div
             style={{
@@ -151,170 +315,141 @@ export default class GameBoard extends Component {
               onPowerBonusClick={this.props.onPowerBonusClick}
             />
           </div>
-
-          {/* Right side of score track */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '0%',
-              right: '0%',
-              bottom: '0%',
-              width: '3.4%',
-              height: '95.5%',
-            }}
-          >
-            <RightScoreTrack
-              onTrackClick={this.props.onTrackClick}
-            />
-          </div>
-
-          {/* Bottom score row */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '0%',
-              left: '0%',
-              right: '0%',
-              height: '4.8%',
-            }}
-          >
-            <BottomScoreTrack
-              onTrackClick={this.props.onTrackClick}
-            />
-          </div>
         </div>
       </div>
     )
   }
 }
 
-class TopLeftScoreTrack extends Component {
+class TrackerImg extends Component {
   static propTypes = {
-    onTrackClick: PropTypes.func.isRequired,
+    color: PropTypes.oneOf(Object.keys(colors)),
+    // TODO: for now, let's just use percentages.
+    width: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
+    height: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
+    bottom: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
+    left: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
   }
 
-  render() {
-    return (
-      <div style={{ display: 'flex', height: '100%', }}>
-        {/* Top left square, 20 pts */}
-        <div
-          style={{ width: '40%', }}
-          onClick={() => this.props.onTrackClick(20)}
-        >
-        </div>
-        <div style={{ width: '33%', display: 'column', }}>
-          {/* 21 pts */}
-          <div
-            value={21}
-            style={{ height: '82%', }}
-            onClick={() => this.props.onTrackClick(21)}
-          >
-          </div>
-        </div>
-        <div style={{ width: '27%' }}>
-          {/* 22 pts */}
-          <div
-            value={22}
-            style={{ height: '65%', }}
-            onClick={() => this.props.onTrackClick(22)}
-          >
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
-
-class TopScoreTrack extends Component {
-  static propTypes = {
-    onTrackClick: PropTypes.func.isRequired,
+  static defaultProps = {
+    color: colors.black,
+    width: '80%',
+    //height: 'auto',
+    bottom: '16%',
+    left: '10%',
   }
 
-  render() {
-    const smallBoxes = []
-    for (let i = 0; i < 25; i++) {
-      smallBoxes.push(
-        <div
-          key={24 + i}
-          style={{ width: `${100 / 25}%` }}
-          onClick={() => this.props.onTrackClick(24 + i)}
-        >
-        </div>
-      )
+  getImageSrc = () => {
+    switch (this.props.color) {
+      case colors.black:
+      default:
+        return trackerImg
+    }
+  }
+
+  getImageHeight = () => {
+    if (this.props.height) {
+      return this.props.height
     }
 
-    return (
-      <div style={{ width: '100%', height: '100%', display: 'flex' }}>
-        <div
-          style={{ width: '5%', height: '122%' }}
-          onClick={() => this.props.onTrackClick(23)}
-        >
-        </div>
-        {smallBoxes}
-      </div>
-    )
-  }
-}
+    const imgWidth = this.img && this.img.clientWidth
 
-class RightScoreTrack extends Component {
-  static propTypes = {
-    onTrackClick: PropTypes.func.isRequired,
-  }
-
-  render() {
-    const pointOffset = 49
-    const numBoxes = 21
-    const smallBoxes = []
-    for (let i = 0; i < numBoxes; i++) {
-      smallBoxes.push(
-        <div
-          key={pointOffset + i}
-          style={{ height: `${100 / numBoxes}%` }}
-          onClick={() => this.props.onTrackClick(pointOffset + i)}
-        >
-        </div>
-      )
+    if (imgWidth) {
+      // const parsedPropsWidth = parseInt(this.props.width.replace(/%$/, ''), 10) / 100
+      return imgWidth * (64 / 45) // dimension ratio
     }
 
+    return 0 
+    // return 'auto'
+  }
+
+  updateImageRef = (img) => {
+    if (!this.img) {
+      this.img = img
+      setTimeout(() => this.forceUpdate())
+    }
+  }
+
+  render() {
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', }}>
-        {smallBoxes}
-      </div>
+      <img
+        src={this.getImageSrc()}
+        alt=""
+        ref={this.updateImageRef}
+        style={{
+          position: 'relative',
+          bottom: this.props.bottom,
+          // left: this.props.left,
+          width: this.props.width,
+          height: this.getImageHeight(),
+          padding: '1%',
+        }}
+      />
     )
   }
 }
 
-class BottomScoreTrack extends Component {
+class TrackSquare extends Component {
   static propTypes = {
-    onTrackClick: PropTypes.func.isRequired,
+    style: PropTypes.object,
+    tokens: PropTypes.arrayOf(
+      PropTypes.oneOf(Object.keys(colors))
+    ),
+    onClick: PropTypes.func,
+  }
+
+  static defaultProps = {
+    style: {},
+    tokens: [],
+  }
+
+  static style = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  }
+
+  updateRef = (div) => {
+    if (!this.div) {
+      this.div = div
+      setTimeout(() => this.forceUpdate())
+    }
+  }
+
+  getDimensions = () => {
+    let dim = `${(this.div && (this.div.clientWidth || this.div.clientHeight)) || 0}px`
+
+    return {
+      height: dim,
+      width: dim,
+    }
   }
 
   render() {
-    const numBoxes = 32
-    const smallBoxes = []
-
-    smallBoxes.push(
+    return (
       <div
-        key={1}
-        style={{ width: `${100 / numBoxes}%` }}
-        onClick={() => this.props.onTrackClick(1)}
+        ref={this.updateRef}
+        style={{
+          ...TrackSquare.style,
+          ...this.getDimensions(),
+          ...this.props.style
+        }}
+        onClick={() => this.props.onClick && this.props.onClick()}
       >
-      </div>
-    )
-    for (let i = 0; i < numBoxes - 1; i++) {
-      smallBoxes.push(
-        <div
-          key={100 - i}
-          style={{ width: `${100 / numBoxes}%` }}
-          onClick={() => this.props.onTrackClick(100 - i)}
-        >
-        </div>
-      )
-    }
-
-    return (
-      <div style={{ width: '100%', height: '100%', display: 'flex' }}>
-        {smallBoxes}
+        {this.props.children}
       </div>
     )
   }
@@ -322,46 +457,169 @@ class BottomScoreTrack extends Component {
 
 class LeftScoreTrack extends Component {
   static propTypes = {
-    onTrackClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
+    getScoreTrackTokens: PropTypes.func.isRequired,
   }
 
-  render() {
-    const boxes = []
-    for (let i = 0; i < 15; i++) {
-      boxes.push(
-        <div
-          key={i}
-          style={{ height: '6.666666%' }}
-          onClick={() => this.props.onTrackClick(16 - i)}
+  getSpaces = () => {
+    const spaces = []
+    for (let i = 0; i < 16; i++) {
+      spaces.push(
+        <TrackSquare
+          key={16 - i}
+          style={{
+            height: '6.666666%',
+          }}
+          onClick={() => this.props.onClick(16 - i)}
         >
-        </div>
+          {this.props.getScoreTrackTokens(16 - i)}
+        </TrackSquare>
       )
     }
 
+    return spaces
+  }
+
+  render() {
     return (
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', }}>
-        {/* Top 3 squares */}
-        <div style={{ height: '22.3%', display: 'flex', flexDirection: 'column', }}>
-          {/* 19pt */}
-          <div style={{ height: '39%' }} onClick={() => this.props.onTrackClick(19)}>
-          </div>
-          <div style={{ height: '31%', display: 'flex' }}>
-            {/* 18pt */}
-            <div style={{ width: '80%' }} onClick={() => this.props.onTrackClick(18)}>
-            </div>
-          </div>
-          <div style={{ height: '30%', display: 'flex' }}>
-            {/* 17pt */}
-            <div style={{ width: '75%' }} onClick={() => this.props.onTrackClick(17)}>
-            </div>
-          </div>
-        </div>
-        {/* The rest */}
-        <div style={{ height: '77.7%', display: 'flex', }}>
-          <div style={{ width: '66%' }}>
-            {boxes}
-          </div>
-        </div>
+      <div
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        {this.getSpaces()}
+      </div>
+    )
+  }
+}
+
+class TopScoreTrack extends Component {
+  static propTypes = {
+    onClick: PropTypes.func.isRequired,
+    getScoreTrackTokens: PropTypes.func.isRequired,
+  }
+
+  getSpaces = () => {
+    const spaces = []
+    for (let i = 0; i < 25; i++) {
+      spaces.push(
+        <TrackSquare
+          key={24 + i}
+          style={{
+            width: `${100 / 25}%`,
+          }}
+          onClick={() => this.props.onClick(24 + i)}
+        >
+          {this.props.getScoreTrackTokens(24 + i)}
+        </TrackSquare>
+      )
+    }
+
+    return spaces
+  }
+
+  render() {
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        {this.getSpaces()}
+      </div>
+    )
+  }
+}
+
+class BottomScoreTrack extends Component {
+  static propTypes = {
+    onClick: PropTypes.func.isRequired,
+    getScoreTrackTokens: PropTypes.func.isRequired,
+  }
+
+  getSpaces = () => {
+    const numBoxes = 30
+    const spaces = []
+
+    for (let i = 0; i < numBoxes; i += 1) {
+      spaces.push(
+        <TrackSquare
+          key={100 - i}
+          style={{
+            width: `${100 / numBoxes}%`
+          }}
+          onClick={() => this.props.onClick(100 - i)}
+        >
+          {this.props.getScoreTrackTokens(100 - i)}
+        </TrackSquare>
+      )
+    }
+
+    return spaces
+  }
+
+  render() {
+
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        {this.getSpaces()}
+      </div>
+    )
+  }
+}
+
+class RightScoreTrack extends Component {
+  static propTypes = {
+    onClick: PropTypes.func.isRequired,
+    getScoreTrackTokens: PropTypes.func.isRequired,
+  }
+
+  getSpaces = () => {
+    const pointOffset = 49
+    const numBoxes = 21
+    const spaces = []
+
+    for (let i = 0; i < numBoxes; i++) {
+      spaces.push(
+        <TrackSquare
+          key={pointOffset + i}
+          style={{
+            height: `${100 / numBoxes}%`,
+          }}
+          onClick={() => this.props.onClick(pointOffset + i)}
+        >
+          {this.props.getScoreTrackTokens(pointOffset + i)}
+        </TrackSquare>
+      )
+    }
+
+    return spaces
+  }
+
+  render() {
+    return (
+      <div style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
+        {this.getSpaces()}
       </div>
     )
   }
@@ -414,14 +672,20 @@ class Board extends Component {
     this.state = {
       x: -1,
       y: -1,
-      screenWidth: -1,
-      screenHeight: -1,
+      screenWidth: -1,  // TODO: remove this if we don't need it
+      screenHeight: -1, // TODO: remove this if we don't need it
+      width: -1,
+      height: -1,
     }
+
+    //this.updateDimensions = this.updateDimensions.bind(this)
   }
 
+  /*
   componentWillMount = () => {
     this.updateDimensions()
   }
+  */
 
   componentDidMount = () => {
     window.addEventListener('resize', this.updateDimensions, false)
@@ -442,6 +706,8 @@ class Board extends Component {
     this.setState({
       screenWidth: window.innerWidth,
       screenHeight: window.innerHeight,
+      width: this.div.clientWidth,
+      height: this.div.clientHeight,
     })
   }
 

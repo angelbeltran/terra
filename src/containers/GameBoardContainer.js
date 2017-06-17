@@ -24,6 +24,21 @@ class GameBoardContainer extends Component {
           onBonusCardClick={this.props.clickBonusCard}
           onGridClick={this.props.clickGridSpace}
           onPowerBonusClick={this.props.clickPowerBonus}
+          scores={{
+            1: ['blue'],
+            10: ['blue'],
+            17: ['red', 'blue', 'gray'],
+            18: ['red', 'gray'],
+            19: ['red', 'gray'],
+            20: ['red', 'gray'],
+            21: ['red', 'gray'],
+            22: ['red', 'gray'],
+            23: ['red', 'gray'],
+            26: ['red', 'gray'],
+            45: ['green'],
+            65: ['black'],
+            85: ['brown', 'yellow'],
+          }}
         />
       </div>
     );
