@@ -188,11 +188,11 @@ class PlayerDash extends Component {
         }}
       >
         <div className="card-header">
-          <div className="row">
-            <div className="col-4">
-              <h3>Player Board</h3>
-            </div>
-            <div className="btn-group col-8 d-flex justify-content-end">
+          <div className="d-flex flex-wrap justify-content-around">
+            <h3>
+              Player Board
+            </h3>
+            <div className="btn-group">
               <button
                 className="btn btn-primary"
                 onClick={this.props.startGame}
@@ -237,11 +237,11 @@ class PlayerDash extends Component {
           />
         </div>
         <div className="card-footer">
-          <div className="row">
-            <div className="col-6 d-flex align-items-center">
+          <div className="d-flex flex-wrap justify-content-around">
+            <div>
               {' '}Gold: {this.props.gold}, Workers: {this.props.workers}, Priests: {this.props.priests}
             </div>
-            <div className="col-6 btn-group justify-content-end">
+            <div className="btn-group">
               <button
                 className="btn btn-primary"
                 onClick={() => console.log('test')}
