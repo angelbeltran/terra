@@ -15,10 +15,10 @@ export default class App extends Component {
           }}
         >
           <div className="row no-gutters">
-            <div className="card col-4">
+            <div className="card col col-sm-4">
               <Form />
             </div>
-            <div className="col-8">
+            <div className="col col-sm-8">
               <PlayerDash
                 name="Bob"
               />
