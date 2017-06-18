@@ -15,6 +15,9 @@ class PlayerDash extends Component {
     className: PropTypes.string,
     style: PropTypes.object,
     name: PropTypes.string.isRequired,
+    startGame: PropTypes.func.isRequired,
+    gameStarted: PropTypes.bool.isRequired,
+    power: PropTypes.arrayOf(PropTypes.number).isRequired,
   }
 
   static defaultProps = {
@@ -187,10 +190,19 @@ class PlayerDash extends Component {
         <div className="card-header">
           <div className="row">
             <div className="col-4">
-              <h3>Player Card</h3>
+              <h3>Player Board</h3>
             </div>
-            <div className="col-8 d-flex justify-content-end">
+            <div className="btn-group col-8 d-flex justify-content-end">
+              <button
+                className="btn btn-primary"
+                onClick={this.props.startGame}
+                disabled={this.props.gameStarted}
+              >
+                Start Game
+              </button>
               <select
+                className="btn btn-secondary"
+                value={this.props.race}
                 onChange={(e) => this.props.changeRace(e.target.value)}
               >
                 <option value="">select a race</option>
@@ -205,6 +217,7 @@ class PlayerDash extends Component {
           <PlayerBoard
             race={this.props.race}
 
+            power={this.props.power}
             villageCount={this.props.villageCount}
             tradePostCount={this.props.tradePostCount}
             templeCount={this.props.templeCount}
@@ -224,7 +237,31 @@ class PlayerDash extends Component {
           />
         </div>
         <div className="card-footer">
-          Footer
+          <div className="row">
+            <div className="col-6 d-flex align-items-center">
+              {' '}Gold: {this.props.gold}, Workers: {this.props.workers}, Priests: {this.props.priests}
+            </div>
+            <div className="col-6 btn-group justify-content-end">
+              <button
+                className="btn btn-primary"
+                onClick={() => console.log('test')}
+              >
+                Confirm turn
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => console.log('test')}
+              >
+                Reset turn
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => console.log('test')}
+              >
+                Pass
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     )

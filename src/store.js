@@ -8,6 +8,7 @@ import {
   MAX_STRONGHOLDS,
   MAX_SANCTUARIES,
   races,
+  startingValues,
 } from './config'
 
 const maxNumOfBuildings = {
@@ -25,6 +26,7 @@ const CLICK_POWER_BONUS = 'CLICK_POWER_BONUS'
 const CLICK_GRID_SPACE = 'CLICK_GRID_SPACE'
 const DROP_ON_GRID_SPACE = 'DROP_ON_GRID_SPACE'
 const CHANGE_RACE = 'CHANGE_RACE'
+const START_GAME = 'START_GAME'
 
 /* action creators */
 export function clickScoreTrack(score) {
@@ -74,30 +76,38 @@ export function changeRace(race) {
   }
 }
 
+export function startGame() {
+  return {
+    type: START_GAME,
+  }
+}
+
 /* app reducer */
 const initialState = {
   // config
   races: races.slice(),
 
-  // Game Board data
+  // general data
+  gameStarted: false,
 
+  // Game Board data
   bonusCards: {
     // these bools signify which bonus cards are displayed
+    0: true,
     1: true,
     2: true,
     3: true,
     4: true,
     5: true,
-    6: true,
   },
   powerBonuses: {
     // these bools signify which power bonuses are still available
+    0: true,
     1: true,
     2: true,
     3: true,
     4: true,
     5: true,
-    6: true,
   },
   buildingPlacement: {
     0: {
@@ -132,23 +142,34 @@ const initialState = {
   // Player data
   race: races[Math.floor(Math.random() * races.length)],
   yourTurn: true,
-  power: {
-    1: 5,
-    2: 7,
-    3: 0,
-  },
+  workers: 0,
+  gold: 0,
+  priests: 0,
+  power: [0, 0, 0],
   villageCount: 8,
   tradePostCount: 4,
   templeCount: 3,
   strongholdCount: 1,
-  strongholdActionTaken: false,
   sanctuaryCount: 1,
+  priestCount: 7,
   shovelLevel: 1,
   shippingDistance: 0,
+  strongholdActionTaken: false,
 }
 
 function rootReducer(state = initialState, action) {
   switch (action.type) {
+
+    case START_GAME:
+      if (!state.race) {
+        return state
+      }
+      console.log('game started')
+      return {
+        ...state,
+        gameStarted: true,
+        ...startingValues[state.race],
+      }
 
     case CLICK_SCORE_TRACK:
       console.log(`score track clicked: ${action.score}`)
@@ -193,7 +214,7 @@ function rootReducer(state = initialState, action) {
       console.log(`changing race to ${action.race}`)
       return {
         ...state,
-        race: races.includes(action.race) ? console.log('yolo') || action.race : state.race,
+        race: races.includes(action.race) ? action.race : state.race,
       }
 
     default:

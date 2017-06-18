@@ -8,6 +8,7 @@ import templeBlackImg from '../img/temple_black.png'
 import strongholdImg from '../img/stronghold_black.png'
 import sanctuaryImg from '../img/sanctuary_black.png'
 import trackerImg from '../img/tracker_black.png'
+import actionTokenImg from '../img/action_token.png'
 
 
 const img = {
@@ -40,6 +41,7 @@ export default class GameBoard extends Component {
     onGridClick: PropTypes.func.isRequired,
     // 0..5 -> power bonus spaces
     onPowerBonusClick: PropTypes.func.isRequired,
+    powerBonuses: PropTypes.objectOf(PropTypes.bool).isRequired,
     // where the buildings are placed
     buildingPlacement: PropTypes.object.isRequired,
     // when a thing is placed on the board
@@ -280,7 +282,7 @@ export default class GameBoard extends Component {
             }}
           >
             <Board
-              handleGridClick={this.props.onGridClick}
+              onClick={this.props.onGridClick}
               buildingPlacement={this.props.buildingPlacement}
               onDrop={this.props.onGridDrop}
             />
@@ -297,7 +299,7 @@ export default class GameBoard extends Component {
             }}
           >
             <BonusCards
-              onBonusCardClick={this.props.onBonusCardClick}
+              onClick={this.props.onBonusCardClick}
             />
           </div>
 
@@ -312,7 +314,8 @@ export default class GameBoard extends Component {
             }}
           >
             <PowerBonuses
-              onPowerBonusClick={this.props.onPowerBonusClick}
+              onClick={this.props.onPowerBonusClick}
+              available={this.props.powerBonuses}
             />
           </div>
         </div>
@@ -627,7 +630,7 @@ class RightScoreTrack extends Component {
 
 class BonusCards extends Component {
   static propTypes = {
-    onBonusCardClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
   }
 
   render() {
@@ -643,7 +646,7 @@ class BonusCards extends Component {
         >
           <div
             style={{ height: '88%' }}
-            onClick={() => this.props.onBonusCardClick(6 - i)}>
+            onClick={() => this.props.onClick(6 - i)}>
           </div>
         </div>
       )
@@ -659,7 +662,7 @@ class BonusCards extends Component {
 
 class Board extends Component {
   static propTypes = {
-    handleGridClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
     buildingPlacement: PropTypes.object.isRequired,
     onDrop: PropTypes.func.isRequired,
   }
@@ -766,7 +769,7 @@ class Board extends Component {
       }
     }
 
-    this.props.handleGridClick(tileRow, tileCol)
+    this.props.onClick(tileRow, tileCol)
   }
 
   /*
@@ -897,17 +900,29 @@ class Board extends Component {
 
 class PowerBonuses extends Component {
   static propTypes = {
-    onPowerBonusClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
+    available: PropTypes.objectOf(PropTypes.bool).isRequired,
   }
 
   render() {
     const actionSpaces = []
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 0; i < 6; i++) {
       actionSpaces.push(
         <div
           key={i}
           style={{ width: '5%' }}
-          onClick={() => this.props.onPowerBonusClick(i)}>
+          onClick={() => this.props.onClick(i)}
+        >
+          {!this.props.available[i] &&
+            <img
+              src={actionTokenImg}
+              alt=""
+              style={{
+                width: '100%',
+                height: 'auto',
+              }}
+            />
+          }
         </div>
       )
     }

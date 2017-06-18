@@ -15,6 +15,7 @@ class GameBoardContainer extends Component {
         onGridDrop={this.props.dropOnGridSpace}
         onTrackClick={this.props.clickScoreTrack}
         onBonusCardClick={this.props.clickBonusCard}
+        powerBonuses={this.props.powerBonuses}
         onGridClick={this.props.clickGridSpace}
         onPowerBonusClick={this.props.clickPowerBonus}
         scores={{

@@ -34,6 +34,7 @@ import darklingsBoardImg from '../img/darklings.jpg'
 export default class PlayerBoard extends Component {
   static propTypes = {
     race: PropTypes.oneOf(races.concat('')),
+    power: PropTypes.arrayOf(PropTypes.number).isRequired,
     villageCount: PropTypes.number.isRequired,
     tradePostCount: PropTypes.number.isRequired,
     templeCount: PropTypes.number.isRequired,
@@ -196,9 +197,7 @@ export default class PlayerBoard extends Component {
             {/* Inner div that contains the bowls */}
             <PowerBowls
               onClick={this.handlePowerBowlClick}
-              bowl1Count={2}
-              bowl2Count={4}
-              bowl3Count={6}
+              power={this.props.power}
             />
           </div>
           {/* Terraforming */}
@@ -265,16 +264,8 @@ export default class PlayerBoard extends Component {
 
 class PowerBowls extends Component {
   static propTypes = {
-    bowl1Count: PropTypes.number,
-    bowl2Count: PropTypes.number,
-    bowl3Count: PropTypes.number,
+    power: PropTypes.arrayOf(PropTypes.number).isRequired,
     onClick: PropTypes.func.isRequired,
-  }
-
-  static defaultProps = {
-    bowl1Count: 4,
-    bowl2Count: 4,
-    bowl3Count: 4,
   }
 
   handleClick = (e) => {
@@ -283,7 +274,7 @@ class PowerBowls extends Component {
 
   getPills(bowlNumber) {
     const pills = []
-    const count = this.props[`bowl${bowlNumber}Count`]
+    const count = this.props.power[bowlNumber]
 
     for (let i = 0; i < count; i += 1) {
       pills.push(
@@ -322,7 +313,7 @@ class PowerBowls extends Component {
           }}
         >
 
-          {this.getPills(2)}
+          {this.getPills(1)}
 
         </div>
 
@@ -344,7 +335,7 @@ class PowerBowls extends Component {
           onClick={this.handleClick}
         >
 
-          {this.getPills(1)}
+          {this.getPills(0)}
 
         </div>
 
@@ -366,7 +357,7 @@ class PowerBowls extends Component {
           onClick={this.handleClick}
         >
 
-          {this.getPills(3)}
+          {this.getPills(2)}
 
         </div>
       </div>
