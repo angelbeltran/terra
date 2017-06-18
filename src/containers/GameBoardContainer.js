@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as actions from '../store'
+import { actions } from '../state'
 import GameBoard from '../components/GameBoard'
 // import nomadBoard from '../img/nomads_620_399.jpg'
 // import witchesBoard from '../img/witches_460_296.jpg'
