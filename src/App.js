@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import PlayerDash from './containers/PlayerDash'
 import GameBoardContainer from './containers/GameBoardContainer'
-import Form from './components/Form'
+import ActionHistory from './components/ActionHistory'
 
 
 export default class App extends Component {
@@ -16,7 +16,7 @@ export default class App extends Component {
         >
           <div className="row no-gutters">
             <div className="card col col-sm-4">
-              <Form />
+              <ActionHistory />
             </div>
             <div className="col col-sm-8">
               <PlayerDash

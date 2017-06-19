@@ -1,4 +1,6 @@
 import * as constants from './constants'
+import * as actions from './actions'
+
 export { constants }
-export { default as actions } from './actions'
+export { actions }
 export { default } from './store'

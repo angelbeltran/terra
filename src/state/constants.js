@@ -25,11 +25,23 @@ export const maxNumOfBuildings = {
   sanctuary: MAX_SANCTUARIES,
 }
 
-/* action types */
+/* ACTION TYPES */
+/* general */
+export const START_GAME = 'START_GAME'
+
+/* player */
+export const CHANGE_RACE = 'CHANGE_RACE'
+
+/* board */
+export const DROP_ON_GRID_SPACE = 'DROP_ON_GRID_SPACE'
 export const CLICK_SCORE_TRACK = 'CLICK_SCORE_TRACK'
 export const CLICK_BONUS_CARD = 'CLICK_BONUS_CARD'
 export const CLICK_POWER_BONUS = 'CLICK_POWER_BONUS'
 export const CLICK_GRID_SPACE = 'CLICK_GRID_SPACE'
-export const DROP_ON_GRID_SPACE = 'DROP_ON_GRID_SPACE'
-export const CHANGE_RACE = 'CHANGE_RACE'
-export const START_GAME = 'START_GAME'
+
+/* turn */
+export const ADD_TO_TURN = 'ADD_TO_TURN'
+export const COMMIT_TURN = 'COMMIT_TURN'
+
+/* history */
+export const REVERT_STATE = 'REVERT_STATE'

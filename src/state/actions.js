@@ -3,12 +3,11 @@ import {
   CHANGE_RACE,
   START_GAME,
   DROP_ON_GRID_SPACE,
-  /*
   CLICK_SCORE_TRACK,
   CLICK_BONUS_CARD,
   CLICK_POWER_BONUS,
   CLICK_GRID_SPACE,
-  */
+  REVERT_STATE,
 } from './constants'
 
 /* action creators */
@@ -35,9 +34,7 @@ export function dropOnGridSpace(row, column, { type, id }) {
   }
 }
 
-
-
-/*
+// TODO: UNUSED/UNAPPLIED HANDLERS
 export function clickScoreTrack(score) {
   return {
     type: CLICK_SCORE_TRACK,
@@ -67,4 +64,10 @@ export function clickGridSpace(row, column) {
     column,
   }
 }
-*/
+
+export function revertState(index) {
+  return {
+    type: REVERT_STATE,
+    index,
+  }
+}

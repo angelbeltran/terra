@@ -9,7 +9,7 @@ export default class Navbar extends Component {
           <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleContainer" aria-controls="navbarsExampleContainer" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
-          <a className="navbar-brand" href="#">Terra Mystica</a>
+          <a className="navbar-brand" href="#">Terra Mystica (under construction)</a>
 
           <div className="collapse navbar-collapse" id="navbarsExampleContainer">
             <ul className="navbar-nav mr-auto">
