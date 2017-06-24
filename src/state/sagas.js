@@ -2,6 +2,7 @@ import { put, select, take, call, all } from 'redux-saga/effects'
 import {
   REVERT_STATE,
   COMMIT_STATE,
+  COMMIT_TURN,
   // REVERT_ACTION,
   // UNDO_STATE_DIFF,
   UNDO_STATE_DIFFS,
@@ -168,6 +169,7 @@ export function* actionTracking(filter = {}) {
         break
 
       case COMMIT_STATE:
+      case COMMIT_TURN:
         // if they want to commit their turn, set the history as new for the next turn.
         history = []
         yield put({ type: REPLACE_HISTORY, history })
