@@ -44,4 +44,9 @@ export const ADD_TO_TURN = 'ADD_TO_TURN'
 export const COMMIT_TURN = 'COMMIT_TURN'
 
 /* history */
+export const COMMIT_STATE = 'COMMIT_STATE'
 export const REVERT_STATE = 'REVERT_STATE'
+export const REVERT_ACTION = 'REVERT_ACTION'
+export const UNDO_STATE_DIFF = 'UNDO_STATE_DIFF' // for a single diff
+export const UNDO_STATE_DIFFS = 'UNDO_STATE_DIFFS' // for a sequence of diffs
+export const REPLACE_HISTORY = 'REPLACE_HISTORY'

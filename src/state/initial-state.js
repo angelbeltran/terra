@@ -1,7 +1,7 @@
-import general from './general/initial-state'
-import board from './board/initial-state'
-import player from './player/initial-state'
-import cultTrack from './cult-track/initial-state'
+import general, { filter as generalFilter } from './general/initial-state'
+import board, { filter as boardFilter } from './board/initial-state'
+import player, { filter as playerFilter } from './player/initial-state'
+import cultTrack, { filter as cultTrackFilter } from './cult-track/initial-state'
 import history from './history/initial-state'
 
 export default {
@@ -10,4 +10,11 @@ export default {
   ...player,
   ...cultTrack,
   ...history,
+}
+
+export const filter = {
+  ...generalFilter,
+  ...boardFilter,
+  ...playerFilter,
+  ...cultTrackFilter,
 }

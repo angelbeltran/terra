@@ -8,6 +8,7 @@ import {
   CLICK_POWER_BONUS,
   CLICK_GRID_SPACE,
   REVERT_STATE,
+  COMMIT_TURN,
 } from './constants'
 
 /* action creators */
@@ -65,9 +66,16 @@ export function clickGridSpace(row, column) {
   }
 }
 
-export function revertState(index) {
+export function commitTurn() {
+  return {
+    type: COMMIT_TURN,
+  }
+}
+
+// for partial history reversion
+export function revertState(version) {
   return {
     type: REVERT_STATE,
-    index,
+    version,
   }
 }

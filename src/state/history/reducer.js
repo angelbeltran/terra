@@ -1,32 +1,50 @@
 import initialState from '../initial-state'
 import {
-  REVERT_STATE,
-  COMMIT_TURN,
+  UNDO_STATE_DIFFS,
+  REPLACE_HISTORY,
 } from '../constants'
 
-export default function historyReducer(state = initialState, action) {
-  switch (action.type) {
-    case REVERT_STATE:
-      if (!(action.index > -1)) {
-        throw new Error(`cannot revert history: invalid index: ${action.index}`)
-      } else if (action.index >= state.history.length) {
-        throw new Error(`cannot revert history: index too high: ${action.index} > ${state.history.length}`)
-      }
 
-      return {
-        ...state.history[action.index].state,
-      }
-
-    case COMMIT_TURN:
-      return {
-        ...state,
-        history: [],
-      }
-
-    default:
-      return {
-        ...state,
-        history: [...state.history, { action, state }],
-      }
+function undoDiff(value, { removed, added, changed }) {
+  // add the removed parts
+  if (removed !== undefined) {
+    // if the new or previous values weren't objects, then it was jus a swap
+    if (typeof value !== 'object' || value === null ||
+        typeof removed !== 'object' || removed === null) {
+      return removed
+    }
   }
+
+  const newValue = {
+    ...value,
+    ...removed,
+  }
+
+  // remove the added parts
+  if (added !== undefined) {
+    Object.keys(added).forEach((key) => { delete newValue[key] })
+  }
+
+  // repeat on the "changed" parts
+  if (changed) {
+    Object.keys(changed).forEach((key) => {
+      newValue[key] = undoDiff(newValue[key], changed[key])
+    })
+  }
+
+  return newValue
+}
+
+export default function historyReducer(state = initialState, action) {
+  if (action.type === UNDO_STATE_DIFFS) {
+    // remove added state and add removed state
+    return (action.diffs && action.diffs.reduce(undoDiff, state)) || state
+  } else if (action.type === REPLACE_HISTORY) {
+    console.log('HEY!')
+    return {
+      ...state,
+      stateHistory: action.history,
+    }
+  }
+  return state
 }

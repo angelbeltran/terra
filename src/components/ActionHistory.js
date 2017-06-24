@@ -6,15 +6,19 @@ import { actions } from '../state'
 
 export class ActionHistory extends Component {
   static propTypes = {
-    history: PropTypes.arrayOf(
+    stateHistory: PropTypes.arrayOf(
       PropTypes.shape({
         action: PropTypes.shape({
           type: PropTypes.string.isRequired,
         }),
         state: PropTypes.object.isRequired,
       })
-    ).isRequired,
+    ),
     revertState: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    stateHistory: [],
   }
 
   getActionsDescriptions = (actions) =>
@@ -22,15 +26,11 @@ export class ActionHistory extends Component {
       <div
         key={action.type + index}
         className="row d-flex btn-group"
-        onClick={() => this.props.revertState(index)}
       >
         <div
-          className="col-8"
+          className="col-8 btn border-1"
           style={{
             border: '1px solid rgb(200, 200, 200)',
-            borderRadius: '5px',
-            borderTopRightRadius: '0px',
-            borderBottomRightRadius: '0px',
             fontSize: '0.8rem',
           }}
         >
@@ -38,6 +38,7 @@ export class ActionHistory extends Component {
         </div>
         <button
           className="col-4 btn btn-secondary"
+          onClick={() => this.props.revertState(index)}
         >
           X
         </button>
@@ -50,7 +51,7 @@ export class ActionHistory extends Component {
         <h5>Actions taken</h5>
         <hr />
         {this.getActionsDescriptions(
-          this.props.history.map(({ action }) => action)
+          this.props.stateHistory.map(({ action }) => action)
         )}
       </div>
     )

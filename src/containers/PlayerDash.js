@@ -18,6 +18,8 @@ class PlayerDash extends Component {
     startGame: PropTypes.func.isRequired,
     gameStarted: PropTypes.bool.isRequired,
     power: PropTypes.arrayOf(PropTypes.number).isRequired,
+    commitTurn: PropTypes.func.isRequired,
+    revertState: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -194,7 +196,7 @@ class PlayerDash extends Component {
             </h3>
             <div className="btn-group">
               <button
-                className="btn btn-primary"
+                className="btn btn-secondary"
                 onClick={this.props.startGame}
                 disabled={this.props.gameStarted}
               >
@@ -244,19 +246,19 @@ class PlayerDash extends Component {
             <div className="btn-group">
               <button
                 className="btn btn-primary"
-                onClick={() => console.log('test')}
+                onClick={this.props.commitTurn}
               >
                 Confirm turn
               </button>
               <button
                 className="btn btn-secondary"
-                onClick={() => console.log('test')}
+                onClick={() => this.props.revertState(0)}
               >
                 Reset turn
               </button>
               <button
                 className="btn btn-secondary"
-                onClick={() => console.log('test')}
+                onClick={() => console.log('pass test')}
               >
                 Pass
               </button>

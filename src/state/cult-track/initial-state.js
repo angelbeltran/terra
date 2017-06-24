@@ -24,3 +24,11 @@ export default {
     appointments: [],
   },
 }
+
+// for history revision
+export const filter = {
+  redTrack: true,
+  blueTrack: true,
+  brownTrack: true,
+  grayTrack: true,
+}

@@ -26,3 +26,21 @@ export default {
   // stronghold action avilability
   strongholdActionTaken: false,
 }
+
+// for history revision
+export const filter = {
+  //race: true,
+  workers: true,
+  gold: true,
+  priests: true,
+  power: true,
+  villageCount: true,
+  tradePostCount: true,
+  templeCount: true,
+  strongholdCount: true,
+  sanctuaryCount: true,
+  priestCount: true,
+  shovelLevel: true,
+  shippingDistance: true,
+  strongholdActionTaken: true,
+}

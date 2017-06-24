@@ -49,3 +49,10 @@ export default {
     },
   },
 }
+
+// for history revision
+export const filter = {
+  bonusCards: true,
+  powerBonuses: true,
+  buildingPlacement: true,
+}
