@@ -182,6 +182,50 @@ class PlayerDash extends Component {
   }
 
   render() {
+    const footer = !this.props.gameStarted ? (
+        <div className="btn-group">
+          <button
+            className="btn btn-secondary"
+            onClick={this.props.startGame}
+            disabled={this.props.gameStarted}
+          >
+            Start Game
+          </button>
+          <select
+            className="btn btn-secondary"
+            value={this.props.race}
+            onChange={(e) => this.props.changeRace(e.target.value)}
+          >
+            <option value="">select a race</option>
+            {this.props.races.map((race) => (
+              <option key={race} value={race}>{race}</option>
+            ))}
+          </select>
+        </div>
+      ) : (
+        <div className="btn-group">
+          <button
+            className="btn btn-primary"
+            onClick={this.props.commitTurn}
+            disabled={!this.props.stateHistory.find((obj) => obj.undoable)}
+          >
+            Confirm turn
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => this.props.revertState(0)}
+          >
+            Reset turn
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => console.log('pass test')}
+          >
+            Pass
+          </button>
+        </div>
+      )
+
     return (
       <div
         className={`card ${this.props.className}`}
@@ -192,27 +236,8 @@ class PlayerDash extends Component {
         <div className="card-header">
           <div className="d-flex flex-wrap justify-content-around">
             <h3>
-              Player Board
+              {this.props.yourTurn ? 'Your turn' : 'Waiting for other players'}
             </h3>
-            <div className="btn-group">
-              <button
-                className="btn btn-secondary"
-                onClick={this.props.startGame}
-                disabled={this.props.gameStarted}
-              >
-                Start Game
-              </button>
-              <select
-                className="btn btn-secondary"
-                value={this.props.race}
-                onChange={(e) => this.props.changeRace(e.target.value)}
-              >
-                <option value="">select a race</option>
-                {this.props.races.map((race) => (
-                  <option key={race} value={race}>{race}</option>
-                ))}
-              </select>
-            </div>
           </div>
         </div>
         <div className="card-body">
@@ -243,26 +268,7 @@ class PlayerDash extends Component {
             <div>
               {' '}Gold: {this.props.gold}, Workers: {this.props.workers}, Priests: {this.props.priests}
             </div>
-            <div className="btn-group">
-              <button
-                className="btn btn-primary"
-                onClick={this.props.commitTurn}
-              >
-                Confirm turn
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => this.props.revertState(0)}
-              >
-                Reset turn
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => console.log('pass test')}
-              >
-                Pass
-              </button>
-            </div>
+            {footer}
           </div>
         </div>
       </div>
