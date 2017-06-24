@@ -11,7 +11,7 @@ export class ActionHistory extends Component {
         action: PropTypes.shape({
           type: PropTypes.string.isRequired,
         }),
-        state: PropTypes.object.isRequired,
+        diffs: PropTypes.object.isRequired,
       })
     ),
     revertState: PropTypes.func.isRequired,
@@ -21,8 +21,8 @@ export class ActionHistory extends Component {
     stateHistory: [],
   }
 
-  getActionsDescriptions = (actions) =>
-    actions.map((action, index) => (
+  getActionsDescriptions = (objs) =>
+    objs.map(({ action, index }) => (
       <div
         key={action.type + index}
         className="row d-flex btn-group"
@@ -51,7 +51,9 @@ export class ActionHistory extends Component {
         <h5>Actions taken</h5>
         <hr />
         {this.getActionsDescriptions(
-          this.props.stateHistory.map(({ action }) => action)
+          this.props.stateHistory
+            .map((obj, index) => ({ ...obj, index }))
+            .filter((obj) => obj.undoable)
         )}
       </div>
     )

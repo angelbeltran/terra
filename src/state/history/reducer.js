@@ -40,7 +40,6 @@ export default function historyReducer(state = initialState, action) {
     // remove added state and add removed state
     return (action.diffs && action.diffs.reduce(undoDiff, state)) || state
   } else if (action.type === REPLACE_HISTORY) {
-    console.log('HEY!')
     return {
       ...state,
       stateHistory: action.history,

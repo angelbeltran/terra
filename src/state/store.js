@@ -5,8 +5,8 @@ import boardReducer from './board/reducer'
 import playerReducer from './player/reducer'
 import cultTrackReducer from './cult-track/reducer'
 import historyReducer from './history/reducer'
-import initialState, { filter as historyFilter } from './initial-state'
-import bootUpSaga, { historySaga } from './sagas'
+import { filter as historyFilter } from './initial-state'
+import bootUpSaga, { actionTracking } from './sagas'
 
 
 const composeReducers = (...r) => r.reduceRight((f, g) => (s, a) => f(g(s, a), a), (s) => s)
@@ -30,4 +30,4 @@ export default createStore(
 )
 
 sagaMiddleware.run(bootUpSaga)
-sagaMiddleware.run(historySaga, historyFilter, initialState)
+sagaMiddleware.run(actionTracking, historyFilter)

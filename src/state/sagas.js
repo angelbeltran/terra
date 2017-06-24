@@ -2,10 +2,14 @@ import { put, select, take, call, all } from 'redux-saga/effects'
 import {
   REVERT_STATE,
   COMMIT_STATE,
-  REVERT_ACTION,
+  // REVERT_ACTION,
   // UNDO_STATE_DIFF,
   UNDO_STATE_DIFFS,
   REPLACE_HISTORY,
+
+  // actions filtered
+  DROP_ON_GRID_SPACE,
+  CLICK_POWER_BONUS,
 } from './constants'
 
 
@@ -124,48 +128,75 @@ function diff(a, b) {
 }
 
 
-export function* historySaga(filter = {}, initialState = {}) {
-  let prevState = initialState
+export function* actionTracking(filter = {}) {
   let history = []
+  let prevState = yield select((s) => s)
 
   while (true) {
+    // look for a game action or action to commit/undo their turn
     const action = yield take()
-    console.log('ACTION:', action)
     const type = action && action.type
     const state = yield select((s) => s)
+    let undoable = false
+    let filteredPrevState//  = filterObject(prevState, filter)
+    let filteredState// = filterObject(state, filter)
+    let diffs// = diff(filteredPrevState, filteredState)
 
-    if (type === COMMIT_STATE) {
-      history = []
-    } else if (type === REVERT_ACTION) {
-      // TODO: might be useful to just undo the action of one diff
-      // yield put({ type: UNDO_STATE_DIFF, diff }) 
-    } else if (type === REVERT_STATE) {
-      const version = action.version
+    /* eslint-disable no-fallthrough*/
+    switch (type) {
+      case REVERT_STATE:
+        // if they want to undo their action(s), revert the state and history back.
+        const version = action.version
 
-      if (version < history.length) {
-        // undo the diffs enacted by the previous action(s)
-        const diffs = history.slice(version).reverse().map(({ diffs }) => diffs)
+        if (version < history.length) {
+          // undo the undoable diffs enacted by the previous action(s)
+          const historyToBeReverted = history.slice(version)
 
-        history = history.slice(0, version)
-        yield put({ type: UNDO_STATE_DIFFS, diffs }) // if the store doesn't have the history reducer added in, this won't work
-        yield put({ type: REPLACE_HISTORY, history: history.slice() })
-      }
-    } else {
-      // compare the previous state and the next state in the areas of the state we are concerned about
-      const filteredPrevState = filterObject(prevState, filter)
-      const filteredState = filterObject(state, filter)
-      const diffs = diff(filteredPrevState, filteredState)
+          history = history.slice(0, version).concat(
+            historyToBeReverted.filter((obj) => !obj.undoable)
+          )
+          // if the store doesn't have the history reducer added in, this won't work
+          yield put({
+            type: UNDO_STATE_DIFFS,
+            diffs: historyToBeReverted
+              .filter((obj) => obj.undoable)
+              .reverse()
+              .map(({ diffs }) => diffs)
+          })
+          yield put({ type: REPLACE_HISTORY, history })
+        }
+        break
 
-      console.log('DIFFS:', diffs)
-      // saved any diffs we found in the history
-      if (diffs) {
-        history.push({
-          action,
-          diffs,
-        })
+      case COMMIT_STATE:
+        // if they want to commit their turn, set the history as new for the next turn.
+        history = []
         yield put({ type: REPLACE_HISTORY, history })
-      }
+        break
+
+      case DROP_ON_GRID_SPACE:
+      case CLICK_POWER_BONUS:
+        // if a action we're watching for occurs, add it and it's diff to the history,
+        // marking it as undoable in case they want to undo it.
+        undoable = true
+
+      default:
+        // if an action we're not watching for happens, add it track it's diff,
+        // so we can know what truly is from the actions we care about.
+        filteredPrevState = filterObject(prevState, filter)
+        filteredState = filterObject(state, filter)
+        diffs = diff(filteredPrevState, filteredState)
+
+        // saved any diffs we found in the history
+        if (diffs) {
+          history.push({
+            undoable,
+            action,
+            diffs,
+          })
+          yield put({ type: REPLACE_HISTORY, history })
+        }
     }
+    /* eslint-enable no-fallthrough*/
 
     prevState = state
   }
